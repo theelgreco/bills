@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Family {
+  id      String   @id @default(cuid())
+  name    String
+
+  members Person[]
+  bills   Bill[]
+}
+
+model Person {
+  id       String @id @default(cuid())
+  name     String
+  image    String
+  username String @unique
+  password String
+
+  familyId String
+  family   Family @relation(fields: [familyId], references: [id])
+
+  cards        Card[]
+  billPayments BillPayment[]
+}
+
+model Card {
+  id            String @id @default(cuid())
+  name          String
+  lastFourDigits Int
+  sortCode      Int
+  accountNumber Int
+
+  ownerId String
+  owner   Person @relation(fields: [ownerId], references: [id])
+
+  bills Bill[]
+}
+
+model Bill {
+  id              String @id @default(cuid())
+  name            String
+  totalAmountPence Int
+  paymentDay      Int
+  transferDay     Int
+
+  cardId   String
+  card     Card   @relation(fields: [cardId], references: [id])
+
+  familyId String
+  family   Family @relation(fields: [familyId], references: [id])
+
+  payments BillPayment[]
+}
+
+model BillPayment {
+  id          String @id @default(cuid())
+  amountPence Int
+
+  billId  String
+  bill    Bill   @relation(fields: [billId], references: [id])
+
+  payerId String
+  payer   Person @relation(fields: [payerId], references: [id])
+}
