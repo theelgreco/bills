@@ -1,0 +1,7 @@
+.debug-rerender-count {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    border: 1px solid var(--color-border);
+    padding: 2rem;
+}
