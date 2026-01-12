@@ -5,7 +5,7 @@ import { handleAppErrors } from "./shared/middleware/errors";
 import { login, register } from "./features/auth/controllers";
 import { getFamily, postFamilies, postFamilyJoin } from "./features/families/controllers";
 import { hasFamily } from "./features/families/permissions";
-import { deleteBill, getBills, postBills, putBill } from "./features/bills/controllers";
+import { deleteBill, deleteBillPayment, getBills, postBillPayments, postBills, putBill } from "./features/bills/controllers";
 
 const PORT = Number(process.env.PORT || 8080);
 
@@ -30,6 +30,8 @@ app.get("/bills", hasFamily, getBills);
 app.post("/bills", hasFamily, postBills);
 app.put("/bills/:id", hasFamily, putBill);
 app.delete("/bills/:id", hasFamily, deleteBill);
+app.post("/bills/:id/payments", hasFamily, postBillPayments);
+app.delete("/bills/:id/payments/:paymentId", hasFamily, deleteBillPayment);
 
 app.use(handleAppErrors);
 

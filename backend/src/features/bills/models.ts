@@ -1,5 +1,5 @@
 import { prisma } from "../../shared/lib/prisma";
-import { PostBillsPostData, PutBillsData } from "./schemas";
+import { PostBillPaymentsData, PostBillsPostData, PutBillsData } from "./schemas";
 
 export async function getBill(billId: string) {
     return prisma.bill.findUniqueOrThrow({
@@ -20,6 +20,12 @@ export async function getBillWithCardAndOwner(billId: string) {
                     },
                 },
             },
+            payments: {
+                omit: { billId: true },
+                include: {
+                    payer: { omit: { password: true, familyId: true } },
+                },
+            },
         },
     });
 }
@@ -37,6 +43,12 @@ export async function getFamilyBillsWithCardAndOwner(familyId: string) {
                     },
                 },
             },
+            payments: {
+                omit: { billId: true },
+                include: {
+                    payer: { omit: { password: true, familyId: true } },
+                },
+            },
         },
     });
 }
@@ -51,4 +63,12 @@ export async function updateBill(billId: string, data: PutBillsData) {
 
 export async function removeBill(billId: string) {
     return prisma.bill.delete({ where: { id: billId } });
+}
+
+export async function insertBillPayment(data: PostBillPaymentsData & { billId: string; payerId: string }) {
+    return await prisma.billPayment.create({ data });
+}
+
+export async function removeBillPayment(billPaymentId: string) {
+    return await prisma.billPayment.delete({ where: { id: billPaymentId } });
 }

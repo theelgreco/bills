@@ -12,3 +12,8 @@ export type PostBillsPostData = z.infer<typeof PostBillsPostDataSchema>;
 // The request body for 'putting' a bill takes the same data as the post method
 export const PutBillDataSchema = PostBillsPostDataSchema;
 export type PutBillsData = z.infer<typeof PutBillDataSchema>;
+
+export const PostBillPaymentsDataSchema = z.object({
+    amountPence: z.number().min(1),
+});
+export type PostBillPaymentsData = z.infer<typeof PostBillPaymentsDataSchema>;

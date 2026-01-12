@@ -1,6 +1,15 @@
 import type { Request, Response } from "express";
-import { PostBillsPostDataSchema, PutBillDataSchema } from "./schemas";
-import { getBill, getBillWithCardAndOwner, getFamilyBillsWithCardAndOwner, insertBill, removeBill, updateBill } from "./models";
+import { PostBillPaymentsDataSchema, PostBillsPostDataSchema, PutBillDataSchema } from "./schemas";
+import {
+    getBill,
+    getBillWithCardAndOwner,
+    getFamilyBillsWithCardAndOwner,
+    insertBill,
+    insertBillPayment,
+    removeBill,
+    removeBillPayment,
+    updateBill,
+} from "./models";
 import { ForbiddenError } from "../../shared/classes/errors";
 
 /** Get all family bills */
@@ -42,6 +51,37 @@ export async function deleteBill(req: Request, res: Response) {
     if (bill.familyId !== familyId) throw new ForbiddenError("You don't have permission to delete this bill");
 
     await removeBill(billId);
+
+    return res.status(204).send();
+}
+
+/** Create a bill payment */
+export async function postBillPayments(req: Request, res: Response) {
+    const billId = req.params.id as string;
+    const bill = await getBill(billId);
+    const familyId = req.user.familyId as string;
+    const payerId = req.user.id as string;
+
+    if (bill.familyId !== familyId) throw new ForbiddenError("You don't have permission to add a payment to this bill");
+
+    const postData = PostBillPaymentsDataSchema.parse(req.body);
+
+    await insertBillPayment({ ...postData, billId, payerId });
+
+    const updatedBill = await getBillWithCardAndOwner(billId);
+    return res.status(200).send(updatedBill);
+}
+
+/** Create a bill payment */
+export async function deleteBillPayment(req: Request, res: Response) {
+    const paymentId = req.params.billPaymentId as string;
+    const billId = req.params.id as string;
+    const bill = await getBill(billId);
+    const familyId = req.user.familyId as string;
+
+    if (bill.familyId !== familyId) throw new ForbiddenError("You don't have permission to delete a payment from this bill");
+
+    await removeBillPayment(paymentId);
 
     return res.status(204).send();
 }
