@@ -21,6 +21,12 @@ export class UnauthorizedError extends ResponseError {
     }
 }
 
+export class ForbiddenError extends ResponseError {
+    constructor(message = "You are not forbidden to perform this action") {
+        super("ForbiddenError", 403, message);
+    }
+}
+
 export class NotFoundError extends ResponseError {
     constructor(message = "Not found") {
         super("NotFoundError", 404, message);

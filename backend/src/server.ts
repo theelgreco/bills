@@ -3,7 +3,8 @@ import "dotenv/config";
 import { authenticate } from "./shared/middleware/user";
 import { handleAppErrors } from "./shared/middleware/errors";
 import { login, register } from "./features/auth/controllers";
-import { postFamilies, postFamilyJoin } from "./features/families/controllers";
+import { getFamily, postFamilies, postFamilyJoin } from "./features/families/controllers";
+import { hasFamily } from "./features/families/permissions";
 
 const PORT = Number(process.env.PORT || 8080);
 
@@ -19,8 +20,12 @@ app.post("/login", login);
 app.use(authenticate);
 
 /** Families */
+app.get("/families/:id", hasFamily, getFamily);
 app.post("/families", postFamilies);
 app.post("/families/:id/join", postFamilyJoin);
+
+/** Bills */
+
 
 app.use(handleAppErrors);
 
