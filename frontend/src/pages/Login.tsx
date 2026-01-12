@@ -10,18 +10,6 @@ import { apiClient } from "@/api/client";
 import { ResponseError } from "@/api/types";
 import { useUser, type User } from "@/hooks/user";
 
-const defaultLoginValues = {
-    username: "",
-    password: "",
-};
-
-const defaultSignUpValues = {
-    username: "",
-    password: "",
-    image: "",
-    name: "",
-};
-
 export default function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const [passwordHidden, setPasswordHidden] = useState(true);
@@ -34,7 +22,10 @@ export default function Login() {
         formState: { errors: loginErrors },
         reset: resetLogin,
     } = useForm({
-        defaultValues: defaultLoginValues,
+        defaultValues: {
+            username: "",
+            password: "",
+        },
     });
 
     const {
@@ -44,7 +35,12 @@ export default function Login() {
         formState: { errors: signUpErrors },
         reset: resetSignUp,
     } = useForm({
-        defaultValues: defaultSignUpValues,
+        defaultValues: {
+            username: "",
+            password: "",
+            image: "",
+            name: "",
+        },
     });
 
     async function handleLogin(data: RHFSubmitData<typeof handleLoginSubmit>) {
@@ -91,7 +87,7 @@ export default function Login() {
 
     return (
         <div className="w-full h-full grid place-items-center">
-            <Tabs defaultValue="sign-up" className="w-100 max-w-full" onValueChange={reset}>
+            <Tabs defaultValue="login" className="w-100 max-w-full" onValueChange={reset}>
                 <TabsList className="w-full bg-background border border-border h-12 mb-2">
                     <TabsTrigger value="login" disabled={isLoading}>
                         Login
