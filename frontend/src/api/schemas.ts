@@ -24,3 +24,16 @@ export const FamilySchema = z.object({
     members: z.array(FamilyMemberSchema),
 });
 export type Family = z.infer<typeof FamilySchema>;
+
+export const BankCardSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    lastFourDigits: z.number(),
+    sortCode: z.number(),
+    accountNumber: z.number(),
+    owner: z.object({
+        id: z.string(),
+        name: z.string(),
+    }),
+});
+export type BankCard = z.infer<typeof BankCardSchema>;

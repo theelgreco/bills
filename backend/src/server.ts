@@ -7,6 +7,7 @@ import { login, register } from "./features/auth/controllers";
 import { getFamily, postFamilies, postFamilyJoin } from "./features/families/controllers";
 import { hasFamily } from "./features/families/permissions";
 import { deleteBill, deleteBillPayment, getBills, postBillPayments, postBills, putBill } from "./features/bills/controllers";
+import { deleteCard, getCards, postCards, putCard } from "./features/cards/controllers";
 
 const PORT = Number(process.env.PORT || 8080);
 
@@ -36,6 +37,10 @@ app.post("/bills/:id/payments", hasFamily, postBillPayments);
 app.delete("/bills/:id/payments/:paymentId", hasFamily, deleteBillPayment);
 
 /** Cards */
+app.get("/cards", hasFamily, getCards);
+app.post("/cards", hasFamily, postCards);
+app.put("/cards/:id", hasFamily, putCard);
+app.delete("/cards/:id", hasFamily, deleteCard);
 
 app.use(handleAppErrors);
 
