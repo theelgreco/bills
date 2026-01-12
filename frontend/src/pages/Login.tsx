@@ -6,11 +6,13 @@ import { useState } from "react";
 import { Eye, EyeClosed } from "lucide-react";
 import { useForm } from "react-hook-form";
 import type { RHFSubmitData } from "@/types/rhf";
-import { apiClient } from "@/api/client";
-import { ResponseError } from "@/api/types";
-import { useUser, type User } from "@/hooks/user";
+import { APIClient } from "@/api/client";
+import { ResponseError } from "@/api/client";
+import { useUser } from "@/hooks/user";
+import { type User } from "@/api/schemas";
 
 export default function Login() {
+    const apiClient = new APIClient();
     const [isLoading, setIsLoading] = useState(false);
     const [passwordHidden, setPasswordHidden] = useState(true);
     const { login } = useUser();

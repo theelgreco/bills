@@ -23,7 +23,8 @@ export async function postFamilies(req: Request, res: Response) {
 
     const postData = PostFamiliesPostData.parse(req.body);
     const family = await createNewFamily(postData, req.user.id);
-    res.status(200).send(family);
+    const formattedFamily = await getFamilyWithMembers(family.id);
+    res.status(200).send(formattedFamily);
 }
 
 /**
@@ -36,5 +37,6 @@ export async function postFamilyJoin(req: Request, res: Response) {
     else if (req.user.familyId !== null) throw new BadRequestError("You already have a family. You can't join another one!");
 
     const family = await insertNewFamilyMember(familyId, req.user.id);
-    res.status(200).send(family);
+    const formattedFamily = await getFamilyWithMembers(family.id);
+    res.status(200).send(formattedFamily);
 }

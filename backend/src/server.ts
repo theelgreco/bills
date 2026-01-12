@@ -35,6 +35,8 @@ app.delete("/bills/:id", hasFamily, deleteBill);
 app.post("/bills/:id/payments", hasFamily, postBillPayments);
 app.delete("/bills/:id/payments/:paymentId", hasFamily, deleteBillPayment);
 
+/** Cards */
+
 app.use(handleAppErrors);
 
 app.listen(PORT, () => {

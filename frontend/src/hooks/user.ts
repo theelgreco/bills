@@ -1,16 +1,6 @@
+import { type User, UserSchema } from "@/api/schemas";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import z from "zod";
-
-export const UserSchema = z.object({
-    id: z.string(),
-    name: z.string(),
-    username: z.string(),
-    image: z.string(),
-    familyId: z.string().nullable(),
-});
-
-export type User = z.infer<typeof UserSchema>;
 
 export function getInitialUser(): User | null {
     try {
@@ -29,7 +19,6 @@ export function useUser() {
 
     useEffect(() => {
         if (user === null) {
-            console.log(user);
             navigate("/login", { replace: true });
         }
     }, [user, navigate]);
@@ -40,5 +29,13 @@ export function useUser() {
         navigate("/", { replace: true });
     }
 
-    return { user, login };
+    function joinFamily(familyId: string) {
+        if (user) {
+            const newUser = { ...user, familyId };
+            localStorage.setItem("bills-user", JSON.stringify(newUser));
+            setUser(newUser);
+        }
+    }
+
+    return { user, login, joinFamily };
 }

@@ -1,5 +1,4 @@
 import { getInitialUser } from "@/hooks/user";
-import { ResponseError } from "./types";
 
 function getBaseHeaders() {
     const user = getInitialUser();
@@ -11,7 +10,17 @@ function getBaseHeaders() {
     };
 }
 
-class APIClient {
+export class ResponseError {
+    name: string = "";
+    message: string = "";
+
+    constructor({ name, message }: { name: string; message: string }) {
+        this.name = name;
+        this.message = message;
+    }
+}
+
+export class APIClient {
     baseUrl = process.env.NODE_ENV === "development" ? "http://localhost:8080" : "http://localhost:8080";
     baseHeaders = getBaseHeaders();
 
@@ -21,7 +30,7 @@ class APIClient {
     ) {
         const init: RequestInit = {
             headers: { ...this.baseHeaders, ...headers },
-            body: JSON.stringify(body || "{}"),
+            body: body ? JSON.stringify(body) : undefined,
             method: method || "GET",
         };
 
@@ -34,5 +43,3 @@ class APIClient {
         else return result;
     }
 }
-
-export const apiClient = new APIClient();
