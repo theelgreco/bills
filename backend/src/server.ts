@@ -3,6 +3,7 @@ import "dotenv/config";
 import { handleAuthorization } from "./shared/middleware/user";
 import { handleAppErrors } from "./shared/middleware/errors";
 import { login, register } from "./features/auth/controllers";
+import { postFamilies } from "./features/families/controllers";
 
 const PORT = Number(process.env.PORT || 8080);
 
@@ -19,6 +20,8 @@ app.use(handleAuthorization);
 app.get("/", (req, res) => {
     res.status(200).send({ msg: "OK" });
 });
+
+app.post("/families", postFamilies);
 
 app.use(handleAppErrors);
 

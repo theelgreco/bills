@@ -1,9 +1,13 @@
-export class ResponseError extends Error {
-    name: string = "";
-    status: number = 0;
-    message: string = "";
+export abstract class ResponseError extends Error {
+    public status: number;
 
-    response(message: string = this.message): { name: string; message: string } {
+    constructor(name: string, status: number, message: string) {
+        super(message);
+        this.name = name;
+        this.status = status;
+    }
+
+    response(message: string = this.message) {
         return {
             name: this.name,
             message,
@@ -12,31 +16,37 @@ export class ResponseError extends Error {
 }
 
 export class UnauthorizedError extends ResponseError {
-    name = "UnauthorizedError";
-    status = 403;
-    message = "You are not authorized";
+    constructor(message = "You are not authorized") {
+        super("UnauthorizedError", 403, message);
+    }
 }
 
 export class NotFoundError extends ResponseError {
-    name = "NotFoundError";
-    status = 404;
-    message = "Not found";
+    constructor(message = "Not found") {
+        super("NotFoundError", 404, message);
+    }
+}
+
+export class BadRequestError extends ResponseError {
+    constructor(message = "Bad request") {
+        super("BadRequestError", 400, message);
+    }
 }
 
 export class UniqueError extends ResponseError {
-    name = "UniqueError";
-    status = 400;
-    message = "Already exists";
+    constructor(message = "Already exists") {
+        super("UniqueError", 400, message);
+    }
 }
 
 export class WrongPasswordError extends ResponseError {
-    name = "WrongPasswordError";
-    status = 400;
-    message = "Wrong password";
+    constructor(message = "Wrong password") {
+        super("WrongPasswordError", 400, message);
+    }
 }
 
 export class InternalServerError extends ResponseError {
-    name = "InternalServerError";
-    status = 500;
-    message = "An error occurred on the server";
+    constructor(message = "An error occurred on the server") {
+        super("InternalServerError", 500, message);
+    }
 }

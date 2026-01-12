@@ -5,7 +5,6 @@ export const RegisterPostDataSchema = z.object({
     password: z.string().min(6),
     name: z.string(),
     image: z.string(),
-    familyId: z.string(),
 });
 
 export type RegisterPostData = z.infer<typeof RegisterPostDataSchema>;

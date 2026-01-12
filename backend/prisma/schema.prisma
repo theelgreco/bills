@@ -28,8 +28,8 @@ model Person {
   username String @unique
   password String
 
-  familyId String
-  family   Family @relation(fields: [familyId], references: [id])
+  familyId String?
+  family   Family? @relation(fields: [familyId], references: [id])
 
   cards        Card[]
   billPayments BillPayment[]
