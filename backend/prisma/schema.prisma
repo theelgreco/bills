@@ -29,7 +29,7 @@ model Person {
   password String
 
   familyId String?
-  family   Family? @relation(fields: [familyId], references: [id])
+  family   Family? @relation(fields: [familyId], references: [id], onDelete: SetNull)
 
   cards        Card[]
   billPayments BillPayment[]
@@ -43,7 +43,7 @@ model Card {
   accountNumber Int
 
   ownerId String
-  owner   Person @relation(fields: [ownerId], references: [id])
+  owner   Person @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   bills Bill[]
 }
@@ -55,11 +55,11 @@ model Bill {
   paymentDay      Int
   transferDay     Int
 
-  cardId   String
-  card     Card   @relation(fields: [cardId], references: [id])
+  cardId   String?
+  card     Card?   @relation(fields: [cardId], references: [id], onDelete: SetNull)
 
   familyId String
-  family   Family @relation(fields: [familyId], references: [id])
+  family   Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
 
   payments BillPayment[]
 }
@@ -69,8 +69,8 @@ model BillPayment {
   amountPence Int
 
   billId  String
-  bill    Bill   @relation(fields: [billId], references: [id])
+  bill    Bill   @relation(fields: [billId], references: [id], onDelete: Cascade)
 
   payerId String
-  payer   Person @relation(fields: [payerId], references: [id])
+  payer   Person @relation(fields: [payerId], references: [id], onDelete: Cascade)
 }

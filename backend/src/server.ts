@@ -1,5 +1,6 @@
 import express from "express";
 import "dotenv/config";
+import cors from "cors";
 import { authenticate } from "./shared/middleware/user";
 import { handleAppErrors } from "./shared/middleware/errors";
 import { login, register } from "./features/auth/controllers";
@@ -11,6 +12,7 @@ const PORT = Number(process.env.PORT || 8080);
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 /** Auth */
@@ -21,8 +23,8 @@ app.post("/login", login);
 app.use(authenticate);
 
 /** Families */
-app.get("/families/:id", hasFamily, getFamily);
 app.post("/families", postFamilies);
+app.get("/families/:id", hasFamily, getFamily);
 app.post("/families/:id/join", postFamilyJoin);
 
 /** Bills */
