@@ -17,7 +17,25 @@ export class UnauthorizedError extends ResponseError {
     message = "You are not authorized";
 }
 
-export class InternalServerError extends Error {
+export class NotFoundError extends ResponseError {
+    name = "NotFoundError";
+    status = 404;
+    message = "Not found";
+}
+
+export class UniqueError extends ResponseError {
+    name = "UniqueError";
+    status = 400;
+    message = "Already exists";
+}
+
+export class WrongPasswordError extends ResponseError {
+    name = "WrongPasswordError";
+    status = 400;
+    message = "Wrong password";
+}
+
+export class InternalServerError extends ResponseError {
     name = "InternalServerError";
     status = 500;
     message = "An error occurred on the server";

@@ -1,12 +1,33 @@
 import type { Request, Response, NextFunction } from "express";
-import { ResponseError, UnauthorizedError } from "../classes/errors";
+import { InternalServerError, NotFoundError, ResponseError, UnauthorizedError, UniqueError } from "../classes/errors";
+import { PrismaClientKnownRequestError } from "../../../generated/prisma/internal/prismaNamespace";
 
-export function handleAppErrors(err: ResponseError, req: Request, res: Response, next: NextFunction) {
-    console.error(`${new Date().toISOString()}: ${err.status} | ${err.name} | ${err.message}`);
-
-    if (err instanceof UnauthorizedError) {
-        res.status(403).send(err.response());
-    } else {
-        res.status(500).send(err.response());
+export function handleAppErrors(err: Error, req: Request, res: Response, next: NextFunction) {
+    if (err instanceof ResponseError) {
+        console.error(`${new Date().toISOString()}: ${err.status} | ${err.name} | ${err.message}`);
+        res.status(err.status).send(err.response());
+        return;
     }
+
+    if (err instanceof PrismaClientKnownRequestError) {
+        let prismaError: ResponseError | null = null;
+
+        const { code } = err;
+        switch (code) {
+            case "P2025":
+                prismaError = new NotFoundError(`No ${(err.meta?.modelName as string).toLowerCase()} matching those details`);
+                break;
+            case "P2002":
+                prismaError = new UniqueError(`This ${(err.meta?.modelName as string).toLowerCase()} already exists`);
+                break;
+        }
+
+        if (prismaError !== null) {
+            res.status(prismaError.status).send(prismaError.response());
+            return;
+        }
+    }
+
+    console.error(err);
+    res.status(500).send(new InternalServerError().response());
 }
