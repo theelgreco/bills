@@ -1,9 +1,9 @@
 import express from "express";
 import "dotenv/config";
-import { handleAuthorization } from "./shared/middleware/user";
+import { authenticate } from "./shared/middleware/user";
 import { handleAppErrors } from "./shared/middleware/errors";
 import { login, register } from "./features/auth/controllers";
-import { postFamilies } from "./features/families/controllers";
+import { postFamilies, postFamilyJoin } from "./features/families/controllers";
 
 const PORT = Number(process.env.PORT || 8080);
 
@@ -11,17 +11,16 @@ const app = express();
 
 app.use(express.json());
 
+/** Auth */
 app.post("/register", register);
-
 app.post("/login", login);
 
-app.use(handleAuthorization);
+// Auth middleware
+app.use(authenticate);
 
-app.get("/", (req, res) => {
-    res.status(200).send({ msg: "OK" });
-});
-
+/** Families */
 app.post("/families", postFamilies);
+app.post("/families/:id/join", postFamilyJoin);
 
 app.use(handleAppErrors);
 
