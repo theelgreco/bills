@@ -26,10 +26,10 @@ export default function Bill({ onUpdate, onDelete, bill, familyMembers }: Props)
                 {bill.card && (
                     <div className="flex gap-2">
                         <small className="font-extralight">
-                            <b>SC:</b> {bill.card.accountNumber}
+                            <b>SC:</b> {formatSortCode(bill.card.sortCode)}
                         </small>
                         <small className="font-extralight">
-                            <b>AN:</b> {formatSortCode(bill.card.sortCode)}
+                            <b>AN:</b> {bill.card.accountNumber}
                         </small>
                     </div>
                 )}
@@ -45,6 +45,18 @@ export default function Bill({ onUpdate, onDelete, bill, familyMembers }: Props)
                         <small>£{payment.amountPence / 100}</small>
                     </div>
                 ))}
+                {bill.payments.length > 0 && (
+                    <>
+                        <hr className="mt-3" />
+                        <div className="flex justify-between">
+                            <small>Total</small>
+                            <small>
+                                £{bill.payments.reduce((accumulator, currentValue) => accumulator + currentValue.amountPence, 0) / 100} / £
+                                {bill.totalAmountPence / 100}
+                            </small>
+                        </div>
+                    </>
+                )}
                 <div className="flex justify-center items-center">
                     <Button
                         className="grow"
