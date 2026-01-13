@@ -191,3 +191,7 @@ Read more here: https://tailwindcss.com/docs/adding-custom-styles#simple-utiliti
 @utility drag-none {
     -webkit-user-drag: none;
 }
+
+@utility rounded-radius {
+    border-radius: var(--radius);
+}

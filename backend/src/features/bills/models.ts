@@ -65,7 +65,7 @@ export async function removeBill(billId: string) {
     return prisma.bill.delete({ where: { id: billId } });
 }
 
-export async function insertBillPayment(data: PostBillPaymentsData & { billId: string; payerId: string }) {
+export async function insertBillPayment(data: PostBillPaymentsData & { billId: string }) {
     return await prisma.billPayment.create({ data });
 }
 

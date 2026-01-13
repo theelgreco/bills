@@ -112,7 +112,16 @@ export default function Home() {
                         familyMembers={family?.members}
                     />
                     <hr />
-                    <Bills bills={bills} />
+                    <Bills
+                        onCreate={(bill) => setBills((prev) => [...(prev || []), bill])}
+                        onUpdate={(bill) => {
+                            setBills((prev) => (prev || []).map((prevBill) => (prevBill.id === bill.id ? bill : prevBill)));
+                        }}
+                        onDelete={(bill) => setBills((prev) => (prev || []).filter((prevBill) => prevBill.id !== bill.id))}
+                        bills={bills}
+                        cards={cards}
+                        familyMembers={family?.members || []}
+                    />
                 </div>
             ) : (
                 <CreateFamily

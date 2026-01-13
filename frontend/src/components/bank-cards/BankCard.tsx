@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { APIClient } from "@/api/client";
+import { formatSortCode } from "@/lib/utils";
 
 interface Props {
     card: BankCardType;
@@ -15,11 +16,6 @@ export default function BankCard({ onDelete, card }: Props) {
     const cardRef = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
-
-    function formatSortCode(sortCode: number) {
-        const [first, second, third, fourth, fifth, sixth] = sortCode.toString().split("");
-        return `${first}${second}-${third}${fourth}-${fifth}${sixth}`;
-    }
 
     async function deleteCard() {
         try {
@@ -50,7 +46,10 @@ export default function BankCard({ onDelete, card }: Props) {
     }, []);
 
     return (
-        <div ref={cardRef} className="relative flex flex-col justify-between border border-border bg-card min-w-60 h-30 p-3">
+        <div
+            ref={cardRef}
+            className="relative flex flex-col justify-between border border-border bg-linear-to-br from-card min-w-60 h-30 p-3 rounded-radius"
+        >
             <div className="flex justify-between">
                 <Badge>
                     <small>{card.name}</small>

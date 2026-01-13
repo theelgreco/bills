@@ -47,7 +47,6 @@ export default function BankCardForm({ onCreate, setIsAdding, familyMembers }: P
     }, [setIsAdding, isLoading]);
 
     async function addCard(data: RHFSubmitData<typeof handleSubmit>) {
-        console.log(data);
         try {
             setIsLoading(true);
             const response = (await apiClient.fetch("/cards", { method: "POST", body: data })) as BankCard;
@@ -63,17 +62,22 @@ export default function BankCardForm({ onCreate, setIsAdding, familyMembers }: P
     return (
         <div className="z-1 fixed top-0 left-0 w-full h-full bg-black/70" onClick={() => setIsAdding(false)}>
             <form
+                ref={formRef}
+                className="z-1 absolute top-1/2 left-1/2 -translate-1/2 flex flex-col gap-3 justify-between border border-border bg-background min-w-100 max-w-full p-3 pb-0 rounded-radius"
                 onClick={(e) => {
                     e.stopPropagation();
                 }}
-                ref={formRef}
-                className="z-1 absolute top-1/2 left-1/2 -translate-1/2 flex flex-col justify-between border border-border bg-card min-w-100 max-w-full h-50 p-3 pb-0"
                 onSubmit={handleSubmit(addCard)}
             >
+                <div className="mb-3">
+                    <h1>New card</h1>
+                    <small className="font-extralight">Enter the details of your new card</small>
+                </div>
+
                 <div className="flex justify-between gap-3">
                     <Input
-                        {...register("name")}
-                        className="w-full py-0! text-sm! border-t-0! border-x-0! bg-card!"
+                        {...register("name", { required: true })}
+                        className="w-full py-0! text-sm!"
                         placeholder="Card name"
                         disabled={isLoading}
                     />
@@ -85,7 +89,7 @@ export default function BankCardForm({ onCreate, setIsAdding, familyMembers }: P
                                 <SelectTrigger>
                                     <SelectValue placeholder="Card owner" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent className="bg-background! border-border">
                                     <SelectGroup>
                                         <SelectLabel>Family members</SelectLabel>
                                         {familyMembers.map((familyMember) => (
@@ -101,22 +105,22 @@ export default function BankCardForm({ onCreate, setIsAdding, familyMembers }: P
                 </div>
                 <div className="flex text-nowrap items-center gap-3">
                     <Input
-                        {...register("lastFourDigits")}
-                        className="w-full py-0! text-sm! border-t-0! border-x-0! bg-card!"
+                        {...register("lastFourDigits", { required: true })}
+                        className="w-full py-0! text-sm!"
                         placeholder="Last 4 digits"
                         disabled={isLoading}
                     />
                 </div>
-                <div className="flex justify-between gap-5">
+                <div className="flex justify-between gap-3">
                     <Input
-                        {...register("sortCode")}
-                        className="max-w-full py-0! text-sm! border-t-0! border-x-0! bg-card!"
+                        {...register("sortCode", { required: true })}
+                        className="max-w-full py-0! text-sm!"
                         placeholder="Sort code"
                         disabled={isLoading}
                     />
                     <Input
-                        {...register("accountNumber")}
-                        className="max-w-full py-0! text-sm! border-t-0! border-x-0! bg-card!"
+                        {...register("accountNumber", { required: true })}
+                        className="max-w-full py-0! text-sm!"
                         placeholder="Account no."
                         disabled={isLoading}
                     />

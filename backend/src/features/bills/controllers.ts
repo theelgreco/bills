@@ -23,7 +23,7 @@ export async function getBills(req: Request, res: Response) {
 export async function postBills(req: Request, res: Response) {
     const postData = PostBillsPostDataSchema.parse(req.body);
     const createdBill = await insertBill({ ...postData, familyId: req.user.familyId as string });
-    const bill = getBillWithCardAndOwner(createdBill.id); // Get the newly created bill in the desired format (with card and owner)
+    const bill = await getBillWithCardAndOwner(createdBill.id); // Get the newly created bill in the desired format (with card and owner)
     return res.status(200).send(bill);
 }
 
@@ -60,13 +60,12 @@ export async function postBillPayments(req: Request, res: Response) {
     const billId = req.params.id as string;
     const bill = await getBill(billId);
     const familyId = req.user.familyId as string;
-    const payerId = req.user.id as string;
 
     if (bill.familyId !== familyId) throw new ForbiddenError("You don't have permission to add a payment to this bill");
 
     const postData = PostBillPaymentsDataSchema.parse(req.body);
 
-    await insertBillPayment({ ...postData, billId, payerId });
+    await insertBillPayment({ ...postData, billId });
 
     const updatedBill = await getBillWithCardAndOwner(billId);
     return res.status(200).send(updatedBill);

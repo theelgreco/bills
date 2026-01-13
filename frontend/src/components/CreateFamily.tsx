@@ -80,12 +80,14 @@ export default function CreateFamily({ setFamily }: Props) {
                 <Tabs className="w-100 max-w-full" value={activeTab}>
                     <TabsContent value="create" className="py-10 px-7 border border-border rounded-(--radius)">
                         <div className="mb-8">
-                            <h1 className="font-light">Create a new family</h1>
-                            <h2 className="font-thin text-sm">Please enter your family name to continue</h2>
+                            <h1>Create a new family</h1>
+                            <small className="font-extralight">Please enter your family name to continue</small>
                         </div>
                         <form className="flex flex-col gap-5" onSubmit={createHandleSubmit(createFamily)}>
                             <div className="flex flex-col space-y-2">
-                                <Label htmlFor="name">Family name</Label>
+                                <Label htmlFor="name">
+                                    <small>Family name</small>
+                                </Label>
                                 <Input {...createRegister("name", { required: "This is required." })} id="name" disabled={isLoading} />
                                 <small className="text-destructive">{createErrors.name?.message}</small>
                             </div>
@@ -102,12 +104,14 @@ export default function CreateFamily({ setFamily }: Props) {
                     </TabsContent>
                     <TabsContent value="join" className="py-10 px-7 border border-border rounded-(--radius)">
                         <div className="mb-8">
-                            <h1 className="font-light">Join your family</h1>
-                            <h2 className="font-thin text-sm">Please enter your family ID to continue</h2>
+                            <h1>Join your family</h1>
+                            <small className="font-extralight">Please enter your family ID to continue</small>
                         </div>
                         <form className="flex flex-col gap-5" onSubmit={joinHandleSubmit(joinFamily)}>
                             <div className="flex flex-col space-y-2">
-                                <Label htmlFor="id">Family ID</Label>
+                                <Label htmlFor="id">
+                                    <small>Family ID</small>
+                                </Label>
                                 <Input {...joinRegister("id", { required: "This is required." })} id="id" disabled={isLoading} />
                                 <small className="text-destructive">{joinErrors.id?.message}</small>
                             </div>

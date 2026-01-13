@@ -5,7 +5,7 @@ export const PostBillsPostDataSchema = z.object({
     totalAmountPence: z.number().min(1),
     paymentDay: z.number().min(1).max(31),
     transferDay: z.number().min(1).max(31),
-    cardId: z.string(),
+    cardId: z.string().nullable(),
 });
 export type PostBillsPostData = z.infer<typeof PostBillsPostDataSchema>;
 
@@ -15,5 +15,6 @@ export type PutBillsData = z.infer<typeof PutBillDataSchema>;
 
 export const PostBillPaymentsDataSchema = z.object({
     amountPence: z.number().min(1),
+    payerId: z.string(),
 });
 export type PostBillPaymentsData = z.infer<typeof PostBillPaymentsDataSchema>;
