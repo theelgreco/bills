@@ -106,14 +106,14 @@ export default function Home() {
                     <BankCards
                         onDelete={(card) => setCards((prev) => (prev || []).filter((prevCard) => prevCard.id !== card.id))}
                         onCreate={(card) => {
-                            setCards((prev) => [...(prev || []), card]);
+                            setCards((prev) => [card, ...(prev || [])]);
                         }}
                         cards={cards}
                         familyMembers={family?.members}
                     />
                     <hr />
                     <Bills
-                        onCreate={(bill) => setBills((prev) => [...(prev || []), bill])}
+                        onCreate={(bill) => setBills((prev) => [bill, ...(prev || [])])}
                         onUpdate={(bill) => {
                             setBills((prev) => (prev || []).map((prevBill) => (prevBill.id === bill.id ? bill : prevBill)));
                         }}
