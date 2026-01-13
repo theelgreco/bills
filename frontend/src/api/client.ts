@@ -37,7 +37,14 @@ export class APIClient {
         init.headers = { ...this.baseHeaders, ...init.headers };
 
         const response = await fetch(`${this.baseUrl}${url}`, init);
-        const result = response.json ? await response.json() : response;
+
+        let result;
+
+        try {
+            result = await response.json();
+        } catch {
+            result = response;
+        }
 
         if (response.status < 200 || response.status > 299) throw new ResponseError(result as ResponseError);
         else return result;

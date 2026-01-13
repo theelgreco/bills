@@ -104,6 +104,7 @@ export default function Home() {
             {user?.familyId ? (
                 <div className="flex flex-col flex-1 min-h-0 gap-5">
                     <BankCards
+                        onDelete={(card) => setCards((prev) => (prev || []).filter((prevCard) => prevCard.id !== card.id))}
                         onCreate={(card) => {
                             setCards((prev) => [...(prev || []), card]);
                         }}

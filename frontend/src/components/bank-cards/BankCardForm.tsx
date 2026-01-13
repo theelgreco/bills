@@ -36,7 +36,7 @@ export default function BankCardForm({ onCreate, setIsAdding, familyMembers }: P
 
     useEffect(() => {
         const handleEscapePress = (e: KeyboardEvent) => {
-            if (e.key === "Escape") setIsAdding(false);
+            if (e.key === "Escape" && !isLoading) setIsAdding(false);
         };
 
         window.addEventListener("keydown", handleEscapePress);
@@ -61,7 +61,7 @@ export default function BankCardForm({ onCreate, setIsAdding, familyMembers }: P
     }
 
     return (
-        <div className="fixed top-0 left-0 w-full h-full bg-black/70" onClick={() => setIsAdding(false)}>
+        <div className="z-1 fixed top-0 left-0 w-full h-full bg-black/70" onClick={() => setIsAdding(false)}>
             <form
                 onClick={(e) => {
                     e.stopPropagation();

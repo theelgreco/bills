@@ -7,15 +7,16 @@ import BankCardForm from "./BankCardForm";
 
 interface Props {
     onCreate: (card: BankCardType) => void;
+    onDelete: (card: BankCardType) => void;
     cards: BankCardType[] | null;
     familyMembers: FamilyMember[] | undefined;
 }
 
-export default function BankCards({ onCreate, cards, familyMembers }: Props) {
+export default function BankCards({ onDelete, onCreate, cards, familyMembers }: Props) {
     const [isAdding, setIsAdding] = useState(false);
 
     return (
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 mb-5">
             <div className="flex justify-between items-center">
                 <small>CARDS</small>
                 <Button variant={"ghost"} onClick={() => setIsAdding(true)} disabled={isAdding}>
@@ -29,7 +30,7 @@ export default function BankCards({ onCreate, cards, familyMembers }: Props) {
                 )}
                 {isAdding && familyMembers && <BankCardForm onCreate={onCreate} setIsAdding={setIsAdding} familyMembers={familyMembers} />}
                 {cards?.map((card) => (
-                    <BankCard key={card.id} card={card}></BankCard>
+                    <BankCard key={card.id} card={card} onDelete={onDelete}></BankCard>
                 ))}
             </div>
         </div>

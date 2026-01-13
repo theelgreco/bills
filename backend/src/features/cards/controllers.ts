@@ -15,7 +15,7 @@ export async function getCards(req: Request, res: Response) {
 export async function postCards(req: Request, res: Response) {
     const ownerId = req.user.id as string;
     const postData = PostCardPostDataSchema.parse(req.body);
-    const newCard = await insertCard({ ...postData, ownerId });
+    const newCard = await insertCard({ ...postData });
     const formattedCard = await getCardAndOwner(newCard.id);
 
     return res.status(200).send(formattedCard);

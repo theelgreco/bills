@@ -1,23 +1,71 @@
 import type { BankCard as BankCardType, BankCard } from "@/api/schemas";
 import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Trash } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { APIClient } from "@/api/client";
 
 interface Props {
     card: BankCardType;
+    onDelete: (card: BankCardType) => void;
 }
 
-export default function BankCard({ card }: Props) {
+export default function BankCard({ onDelete, card }: Props) {
+    const apiClient = new APIClient();
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [isHovered, setIsHovered] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+
     function formatSortCode(sortCode: number) {
         const [first, second, third, fourth, fifth, sixth] = sortCode.toString().split("");
         return `${first}${second}-${third}${fourth}-${fifth}${sixth}`;
     }
 
+    async function deleteCard() {
+        try {
+            setIsDeleting(true);
+            await apiClient.fetch(`/cards/${card.id}`, { method: "DELETE" });
+            onDelete(card);
+        } catch (err: unknown) {
+            console.error(err);
+        } finally {
+            setIsDeleting(false);
+        }
+    }
+
+    useEffect(() => {
+        if (cardRef.current === null) return;
+
+        const cardEl = cardRef.current;
+
+        const handleEnter = () => setIsHovered(true);
+        const handleLeave = () => setIsHovered(false);
+        cardEl.addEventListener("mouseenter", handleEnter);
+        cardEl.addEventListener("mouseleave", handleLeave);
+
+        return () => {
+            cardEl.removeEventListener("mouseenter", handleEnter);
+            cardEl.removeEventListener("mouseleave", handleLeave);
+        };
+    }, []);
+
     return (
-        <div className="flex flex-col justify-between border border-border bg-card min-w-60 h-30 p-3">
+        <div ref={cardRef} className="relative flex flex-col justify-between border border-border bg-card min-w-60 h-30 p-3">
             <div className="flex justify-between">
                 <Badge>
                     <small>{card.name}</small>
                 </Badge>
-                <small className="text-xs"></small>
+                <small className="text-xs">{card.owner.name}</small>
+                {isHovered && (
+                    <>
+                        <div className="z-1 flex absolute right-2 top-2" onClick={deleteCard}>
+                            <Button variant={"secondary"} size={"sm"} disabled={isDeleting}>
+                                <Trash />
+                            </Button>
+                        </div>
+                        <div className="absolute top-0 left-0 w-full h-full bg-black/70"></div>
+                    </>
+                )}
             </div>
             <div>
                 <p>**** **** **** {card.lastFourDigits}</p>
