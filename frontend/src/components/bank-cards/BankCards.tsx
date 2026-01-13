@@ -25,9 +25,7 @@ export default function BankCards({ onDelete, onCreate, cards, familyMembers }: 
                 </Button>
             </div>
             <div className="flex gap-2 overflow-x-auto">
-                {!cards?.length && !isAdding && (
-                    <small className="text-center w-fit mx-auto font-extralight">You haven't added any cards yet</small>
-                )}
+                {!cards?.length && <small className="text-center w-fit mx-auto font-extralight">You haven't added any cards yet</small>}
                 {isAdding && familyMembers && <BankCardForm onCreate={onCreate} setIsAdding={setIsAdding} familyMembers={familyMembers} />}
                 {cards?.map((card) => (
                     <BankCard key={card.id} card={card} onDelete={onDelete}></BankCard>
