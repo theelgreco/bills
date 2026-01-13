@@ -8,7 +8,9 @@ export async function getFamily(familyId: string) {
 export async function getFamilyWithMembers(familyId: string) {
     return await prisma.family.findUniqueOrThrow({
         where: { id: familyId },
-        include: { members: { omit: { password: true, familyId: true } } },
+        include: {
+            members: { orderBy: { createdAt: "desc" }, omit: { password: true, familyId: true } },
+        },
     });
 }
 

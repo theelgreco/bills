@@ -19,6 +19,9 @@ model Family {
 
   members Person[]
   bills   Bill[]
+
+  createdAt DateTime @default(now())
+  @@index([createdAt])
 }
 
 model Person {
@@ -33,6 +36,9 @@ model Person {
 
   cards        Card[]
   billPayments BillPayment[]
+
+  createdAt DateTime @default(now())
+  @@index([createdAt])
 }
 
 model Card {
@@ -46,6 +52,9 @@ model Card {
   owner   Person @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   bills Bill[]
+
+  createdAt DateTime @default(now())
+  @@index([createdAt])
 }
 
 model Bill {
@@ -62,6 +71,9 @@ model Bill {
   family   Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
 
   payments BillPayment[]
+
+  createdAt DateTime @default(now())
+  @@index([createdAt])
 }
 
 model BillPayment {
@@ -73,4 +85,7 @@ model BillPayment {
 
   payerId String
   payer   Person @relation(fields: [payerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  @@index([createdAt])
 }

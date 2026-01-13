@@ -21,6 +21,7 @@ export async function getCardAndOwner(cardId: string) {
 export async function getFamilyCardsAndOwner(familyId: string) {
     return await prisma.card.findMany({
         where: { owner: { familyId } },
+        orderBy: { createdAt: "desc" },
         omit: { ownerId: true },
         include: {
             owner: { omit: { password: true, familyId: true } },

@@ -21,6 +21,7 @@ export async function getBillWithCardAndOwner(billId: string) {
                 },
             },
             payments: {
+                orderBy: { createdAt: "desc" },
                 omit: { billId: true, payerId: true },
                 include: {
                     payer: { omit: { password: true, familyId: true } },
@@ -33,6 +34,7 @@ export async function getBillWithCardAndOwner(billId: string) {
 export async function getFamilyBillsWithCardAndOwner(familyId: string) {
     return prisma.bill.findMany({
         where: { familyId },
+        orderBy: { createdAt: "desc" },
         omit: { familyId: true, cardId: true },
         include: {
             card: {
@@ -44,6 +46,7 @@ export async function getFamilyBillsWithCardAndOwner(familyId: string) {
                 },
             },
             payments: {
+                orderBy: { createdAt: "desc" },
                 omit: { billId: true, payerId: true },
                 include: {
                     payer: { omit: { password: true, familyId: true } },
