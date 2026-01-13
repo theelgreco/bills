@@ -7,7 +7,6 @@ export const UserSchema = z.object({
     image: z.string(),
     familyId: z.string().nullable(),
 });
-
 export type User = z.infer<typeof UserSchema>;
 
 export const FamilyMemberSchema = z.object({
@@ -31,9 +30,24 @@ export const BankCardSchema = z.object({
     lastFourDigits: z.number(),
     sortCode: z.number(),
     accountNumber: z.number(),
-    owner: z.object({
-        id: z.string(),
-        name: z.string(),
-    }),
+    owner: FamilyMemberSchema,
 });
 export type BankCard = z.infer<typeof BankCardSchema>;
+
+export const BillPaymentSchema = z.object({
+    id: z.string(),
+    amountPence: z.number(),
+    payer: FamilyMemberSchema,
+});
+export type BillPayment = z.infer<typeof BillPaymentSchema>;
+
+export const BillSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    totalAmountPence: z.number(),
+    paymentDay: z.number(),
+    transferDay: z.number(),
+    card: BankCardSchema,
+    payments: z.array(BillPaymentSchema),
+});
+export type Bill = z.infer<typeof BillSchema>;

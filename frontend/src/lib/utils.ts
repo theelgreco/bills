@@ -34,3 +34,12 @@ export async function stringToHexColor(value: string) {
 
     return `#${rString}${gString}${bString}`;
 }
+
+export function capitalise(str: string, allWords = false) {
+    if (!allWords) return `${str[0].toUpperCase()}${str.slice(1)}`;
+
+    return str
+        .split(" ")
+        .map((word) => `${word[0].toUpperCase()}${word.slice(1)}`)
+        .join(" ");
+}

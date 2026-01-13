@@ -38,9 +38,9 @@ model Person {
 model Card {
   id            String @id @default(cuid())
   name          String
-  lastFourDigits Int
-  sortCode      Int
-  accountNumber Int
+  lastFourDigits String
+  sortCode      String
+  accountNumber String
 
   ownerId String
   owner   Person @relation(fields: [ownerId], references: [id], onDelete: Cascade)

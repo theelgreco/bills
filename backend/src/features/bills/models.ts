@@ -21,7 +21,7 @@ export async function getBillWithCardAndOwner(billId: string) {
                 },
             },
             payments: {
-                omit: { billId: true },
+                omit: { billId: true, payerId: true },
                 include: {
                     payer: { omit: { password: true, familyId: true } },
                 },
@@ -44,7 +44,7 @@ export async function getFamilyBillsWithCardAndOwner(familyId: string) {
                 },
             },
             payments: {
-                omit: { billId: true },
+                omit: { billId: true, payerId: true },
                 include: {
                     payer: { omit: { password: true, familyId: true } },
                 },

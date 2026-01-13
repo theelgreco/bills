@@ -4,6 +4,8 @@ export type ColorThemes = "light" | "dark";
 const localStorageKey = "bills-theme";
 
 function getInitialTheme(): ColorThemes {
+    const localTheme = localStorage.getItem(localStorageKey);
+    if (localTheme && ["dark", "light"].includes(localTheme)) return localTheme as ColorThemes;
     if (typeof window === "undefined") return "light";
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
@@ -26,5 +28,9 @@ export function useColorScheme() {
         document.documentElement.dataset["theme"] = theme;
     }, [theme]);
 
-    return { theme, setTheme };
+    function toggleTheme() {
+        setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+    }
+
+    return { theme, setTheme, toggleTheme };
 }

@@ -6,7 +6,7 @@ import { ForbiddenError } from "../../shared/classes/errors";
 /** Get all family cards */
 export async function getCards(req: Request, res: Response) {
     const familyId = req.user.familyId as string;
-    const cards = getFamilyCardsAndOwner(familyId);
+    const cards = await getFamilyCardsAndOwner(familyId);
 
     res.status(200).send(cards);
 }
