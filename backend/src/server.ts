@@ -9,7 +9,7 @@ import { getFamily, postFamilies, postFamilyJoin } from "./features/families/con
 import { hasFamily } from "./features/families/permissions.js";
 import { deleteBill, deleteBillPayment, getBills, postBillPayments, postBills, putBill } from "./features/bills/controllers.js";
 import { deleteCard, getCards, postCards, putCard } from "./features/cards/controllers.js";
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
 
 const PORT = Number(process.env.PORT || 8080);
 
@@ -17,7 +17,8 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173",
+        origin: ["http://localhost:5173", "https://bills.stelan.io"],
+        credentials: true,
     },
 });
 
