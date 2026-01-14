@@ -5,7 +5,8 @@
     "main": "src/server.ts",
     "scripts": {
         "dev": "tsx --watch src/server.ts",
-        "start": "tsx src/server.ts"
+        "build": "rm -rf dist && npx prisma migrate deploy && npx prisma generate && tsc",
+        "start": "node dist/src/server.js"
     },
     "keywords": [],
     "author": "",

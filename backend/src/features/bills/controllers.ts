@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { PostBillPaymentsDataSchema, PostBillsPostDataSchema, PutBillDataSchema } from "./schemas";
+import { PostBillPaymentsDataSchema, PostBillsPostDataSchema, PutBillDataSchema } from "./schemas.js";
 import {
     getBill,
     getBillWithCardAndOwner,
@@ -9,8 +9,8 @@ import {
     removeBill,
     removeBillPayment,
     updateBill,
-} from "./models";
-import { ForbiddenError } from "../../shared/classes/errors";
+} from "./models.js";
+import { ForbiddenError } from "../../shared/classes/errors.js";
 
 /** Get all family bills */
 export async function getBills(req: Request, res: Response) {

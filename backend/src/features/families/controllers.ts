@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { PostFamiliesPostData } from "./schemas";
-import { createNewFamily, getFamilyWithMembers, insertNewFamilyMember } from "./models";
-import { BadRequestError, ForbiddenError } from "../../shared/classes/errors";
+import { PostFamiliesPostData } from "./schemas.js";
+import { createNewFamily, getFamilyWithMembers, insertNewFamilyMember } from "./models.js";
+import { BadRequestError, ForbiddenError } from "../../shared/classes/errors.js";
 
 /**
  * Get family data

@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
-import { InternalServerError, NotFoundError, ResponseError, UnauthorizedError, UniqueError } from "../classes/errors";
-import { PrismaClientKnownRequestError } from "../../../generated/prisma/internal/prismaNamespace";
+import { InternalServerError, NotFoundError, ResponseError, UnauthorizedError, UniqueError } from "../classes/errors.js";
+import { PrismaClientKnownRequestError } from "../../../generated/prisma/internal/prismaNamespace.js";
 
 export function handleAppErrors(err: Error, req: Request, res: Response, next: NextFunction) {
     if (err instanceof ResponseError) {

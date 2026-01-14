@@ -1,5 +1,5 @@
-import { prisma } from "../../shared/lib/prisma";
-import { PostCardPostData, PutCardData } from "./schemas";
+import { prisma } from "../../shared/lib/prisma.js";
+import { PostCardPostData, PutCardData } from "./schemas.js";
 
 export async function getCardAndOwnerAndFamily(cardId: string) {
     return await prisma.card.findFirstOrThrow({

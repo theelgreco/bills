@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { WrongPasswordError } from "../classes/errors";
+import { WrongPasswordError } from "../classes/errors.js";
 
 export const hashPassword = async (password: string) => {
     return await bcrypt.hash(password, 10);

@@ -1,13 +1,13 @@
 import express from "express";
 import "dotenv/config";
 import cors from "cors";
-import { authenticate } from "./shared/middleware/user";
-import { handleAppErrors } from "./shared/middleware/errors";
-import { login, register } from "./features/auth/controllers";
-import { getFamily, postFamilies, postFamilyJoin } from "./features/families/controllers";
-import { hasFamily } from "./features/families/permissions";
-import { deleteBill, deleteBillPayment, getBills, postBillPayments, postBills, putBill } from "./features/bills/controllers";
-import { deleteCard, getCards, postCards, putCard } from "./features/cards/controllers";
+import { authenticate } from "./shared/middleware/user.js";
+import { handleAppErrors } from "./shared/middleware/errors.js";
+import { login, register } from "./features/auth/controllers.js";
+import { getFamily, postFamilies, postFamilyJoin } from "./features/families/controllers.js";
+import { hasFamily } from "./features/families/permissions.js";
+import { deleteBill, deleteBillPayment, getBills, postBillPayments, postBills, putBill } from "./features/bills/controllers.js";
+import { deleteCard, getCards, postCards, putCard } from "./features/cards/controllers.js";
 
 const PORT = Number(process.env.PORT || 8080);
 

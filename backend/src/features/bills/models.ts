@@ -1,5 +1,5 @@
-import { prisma } from "../../shared/lib/prisma";
-import { PostBillPaymentsData, PostBillsPostData, PutBillsData } from "./schemas";
+import { prisma } from "../../shared/lib/prisma.js";
+import { PostBillPaymentsData, PostBillsPostData, PutBillsData } from "./schemas.js";
 
 export async function getBill(billId: string) {
     return prisma.bill.findUniqueOrThrow({

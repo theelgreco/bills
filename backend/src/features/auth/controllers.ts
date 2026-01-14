@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { LoginPostDataSchema, RegisterPostDataSchema } from "./schemas";
-import { createNewUser, getUser } from "./models";
-import { checkPassword, hashPassword } from "../../shared/lib/password";
+import { LoginPostDataSchema, RegisterPostDataSchema } from "./schemas.js";
+import { createNewUser, getUser } from "./models.js";
+import { checkPassword, hashPassword } from "../../shared/lib/password.js";
 
 export async function register(req: Request, res: Response) {
     const postData = RegisterPostDataSchema.parse(req.body);

@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { getCardAndOwner, getCardAndOwnerAndFamily, getFamilyCardsAndOwner, insertCard, removeCard, updateCard } from "./models";
-import { PostCardPostDataSchema, PutCardDataSchema } from "./schemas";
-import { ForbiddenError } from "../../shared/classes/errors";
+import { getCardAndOwner, getCardAndOwnerAndFamily, getFamilyCardsAndOwner, insertCard, removeCard, updateCard } from "./models.js";
+import { PostCardPostDataSchema, PutCardDataSchema } from "./schemas.js";
+import { ForbiddenError } from "../../shared/classes/errors.js";
 
 /** Get all family cards */
 export async function getCards(req: Request, res: Response) {

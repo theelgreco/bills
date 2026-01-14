@@ -1,5 +1,5 @@
-import { prisma } from "../../shared/lib/prisma";
-import type { LoginPostData, RegisterPostData } from "./schemas";
+import { prisma } from "../../shared/lib/prisma.js";
+import type { LoginPostData, RegisterPostData } from "./schemas.js";
 
 export async function createNewUser(data: RegisterPostData) {
     return await prisma.person.create({ data });

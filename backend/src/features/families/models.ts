@@ -1,5 +1,5 @@
-import { prisma } from "../../shared/lib/prisma";
-import { PostFamilies } from "./schemas";
+import { prisma } from "../../shared/lib/prisma.js";
+import { PostFamilies } from "./schemas.js";
 
 export async function getFamily(familyId: string) {
     return await prisma.family.findUniqueOrThrow({ where: { id: familyId } });
