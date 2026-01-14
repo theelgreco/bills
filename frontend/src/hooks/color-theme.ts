@@ -1,10 +1,10 @@
+import { localStorageKeys } from "@/lib/constants";
 import { useEffect, useState } from "react";
 
 export type ColorThemes = "light" | "dark";
-const localStorageKey = "bills-theme";
 
 function getInitialTheme(): ColorThemes {
-    const localTheme = localStorage.getItem(localStorageKey);
+    const localTheme = localStorage.getItem(localStorageKeys.THEME);
     if (localTheme && ["dark", "light"].includes(localTheme)) return localTheme as ColorThemes;
     if (typeof window === "undefined") return "light";
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -24,7 +24,7 @@ export function useColorScheme() {
     }, []);
 
     useEffect(() => {
-        localStorage.setItem(localStorageKey, theme);
+        localStorage.setItem(localStorageKeys.THEME, theme);
         document.documentElement.dataset["theme"] = theme;
     }, [theme]);
 

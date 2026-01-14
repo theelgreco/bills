@@ -1,10 +1,11 @@
 import { type User, UserSchema } from "@/api/schemas";
+import { localStorageKeys } from "@/lib/constants";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 export function getInitialUser(): User | null {
     try {
-        const stored = localStorage.getItem("bills-user");
+        const stored = localStorage.getItem(localStorageKeys.USER);
         if (!stored) return null;
         return UserSchema.parse(JSON.parse(stored));
     } catch (err: unknown) {
@@ -24,18 +25,23 @@ export function useUser() {
     }, [user, navigate]);
 
     function login(user: User) {
-        localStorage.setItem("bills-user", JSON.stringify(user));
+        localStorage.setItem(localStorageKeys.USER, JSON.stringify(user));
         setUser(user);
         navigate("/", { replace: true });
+    }
+
+    function logout() {
+        localStorage.removeItem(localStorageKeys.USER);
+        setUser(null);
     }
 
     function joinFamily(familyId: string) {
         if (user) {
             const newUser = { ...user, familyId };
-            localStorage.setItem("bills-user", JSON.stringify(newUser));
+            localStorage.setItem(localStorageKeys.USER, JSON.stringify(newUser));
             setUser(newUser);
         }
     }
 
-    return { user, login, joinFamily };
+    return { user, login, logout, joinFamily };
 }

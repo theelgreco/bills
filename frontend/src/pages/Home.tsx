@@ -4,8 +4,12 @@ import BankCards from "@/components/bank-cards/BankCards";
 import Bills from "@/components/bills/Bills";
 import CreateFamily from "@/components/CreateFamily";
 import ThemeSwitch from "@/components/ThemeSwitch";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUser } from "@/hooks/user";
 import { getInitials, stringToHexColor } from "@/lib/utils";
+import { TooltipArrow } from "@radix-ui/react-tooltip";
+import { CornerUpRight, Divide, ExternalLink, LogOut, Share2, Slash } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -16,7 +20,7 @@ export default function Home() {
     const [cards, setCards] = useState<BankCard[] | null>(null);
     const [bills, setBills] = useState<Bill[] | null>(null);
     const [avatarIcons, setAvatarIcons] = useState<{ backgroundColor: string; initials: string; id: string }[]>([]);
-    const { user, joinFamily } = useUser();
+    const { user, joinFamily, logout } = useUser();
 
     async function getFamily() {
         if (!user?.familyId) return;
@@ -80,7 +84,7 @@ export default function Home() {
                 {family && (
                     <>
                         <h2 className="text-center font-thin">of the {family.name} tribe.</h2>
-                        <div className="flex gap-2 mt-3">
+                        <div className="flex items-center gap-2 mt-3">
                             {avatarIcons.map((member) => (
                                 <div
                                     key={member.id}
@@ -132,7 +136,23 @@ export default function Home() {
                 />
             )}
             <hr className="mt-auto" />
-            <div className="flex">
+            <div className="flex justify-between">
+                <div className="flex items-center">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button size={"icon-sm"} variant={"ghost"} onClick={logout}>
+                                <LogOut />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Logout</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    <Slash className="-rotate-30! translate-x-0.5 text-primary-foreground/30" size={16} />
+                    <Button variant={"ghost"}>
+                        <Share2 />
+                    </Button>
+                </div>
                 <ThemeSwitch />
             </div>
         </section>
