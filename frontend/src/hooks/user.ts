@@ -1,7 +1,7 @@
 import { type User, UserSchema } from "@/api/schemas";
 import { localStorageKeys } from "@/lib/constants";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate, useSearchParams } from "react-router";
 
 export function getInitialUser(): User | null {
     try {
@@ -16,18 +16,23 @@ export function getInitialUser(): User | null {
 
 export function useUser() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [searchParams] = useSearchParams();
     const [user, setUser] = useState<User | null>(getInitialUser());
 
     useEffect(() => {
-        if (user === null) {
-            navigate("/login", { replace: true });
+        // Don't redirect if already on login or invite page
+        if (user === null && !location.pathname.startsWith("/login") && !location.pathname.startsWith("/invite")) {
+            const currentParams = searchParams.toString();
+            navigate(`/login${currentParams ? `?${currentParams}` : ""}`, { replace: true });
         }
-    }, [user, navigate]);
+    }, [user, navigate, searchParams, location.pathname]);
 
     function login(user: User) {
         localStorage.setItem(localStorageKeys.USER, JSON.stringify(user));
         setUser(user);
-        navigate("/", { replace: true });
+        const redirect = searchParams.get("redirect");
+        navigate(redirect || "/", { replace: true });
     }
 
     function logout() {

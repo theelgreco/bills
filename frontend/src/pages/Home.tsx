@@ -9,7 +9,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { useUser } from "@/hooks/user";
 import { getInitials, stringToHexColor } from "@/lib/utils";
 import { TooltipArrow } from "@radix-ui/react-tooltip";
-import { CornerUpRight, Divide, ExternalLink, LogOut, Share2, Slash } from "lucide-react";
+import { Check, LogOut, Share2, Slash } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -20,6 +20,7 @@ export default function Home() {
     const [cards, setCards] = useState<BankCard[] | null>(null);
     const [bills, setBills] = useState<Bill[] | null>(null);
     const [avatarIcons, setAvatarIcons] = useState<{ backgroundColor: string; initials: string; id: string }[]>([]);
+    const [inviteCopied, setInviteCopied] = useState(false);
     const { user, joinFamily, logout } = useUser();
 
     async function getFamily() {
@@ -155,12 +156,23 @@ export default function Home() {
 
                     <Tooltip disableHoverableContent>
                         <TooltipTrigger asChild>
-                            <Button size={"icon-sm"} variant={"ghost"}>
-                                <Share2 />
+                            <Button
+                                size={"icon-sm"}
+                                variant={"ghost"}
+                                disabled={!user?.familyId}
+                                onClick={() => {
+                                    if (!user?.familyId) return;
+                                    const inviteLink = `${window.location.origin}/invite?familyId=${user.familyId}`;
+                                    navigator.clipboard.writeText(inviteLink);
+                                    setInviteCopied(true);
+                                    setTimeout(() => setInviteCopied(false), 2000);
+                                }}
+                            >
+                                {inviteCopied ? <Check /> : <Share2 />}
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                            <p>Invite a family member</p>
+                            <p>{inviteCopied ? "Copied!" : "Invite a family member"}</p>
                         </TooltipContent>
                     </Tooltip>
                 </div>

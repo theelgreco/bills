@@ -3,6 +3,7 @@ import "./App.css";
 import { useColorScheme } from "./hooks/color-theme";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
+import Invite from "./pages/Invite";
 
 function App() {
     useColorScheme();
@@ -13,6 +14,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />}></Route>
                     <Route path="/login" element={<Login />}></Route>
+                    <Route path="/invite" element={<Invite />}></Route>
                 </Routes>
             </main>
         </BrowserRouter>
