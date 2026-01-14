@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Input } from "../ui/input";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectLabel, SelectItem } from "../ui/select";
-import type { Bill, BillPayment, FamilyMember } from "@/api/schemas";
+import type { Bill, FamilyMember } from "@/api/schemas";
 import { Button } from "../ui/button";
 import { Check, X } from "lucide-react";
 import { APIClient } from "@/api/client";

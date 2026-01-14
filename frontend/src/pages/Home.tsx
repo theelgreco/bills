@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUser } from "@/hooks/user";
 import { getInitials, stringToHexColor } from "@/lib/utils";
-import { TooltipArrow } from "@radix-ui/react-tooltip";
 import { Check, LogOut, Share2, Slash } from "lucide-react";
 import { useEffect, useState } from "react";
 

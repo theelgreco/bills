@@ -21,12 +21,7 @@ export default function BankCardForm({ onSave, setIsOpen, familyMembers, card }:
     const [isLoading, setIsLoading] = useState(false);
     const isEditing = !!card;
 
-    const {
-        register,
-        handleSubmit,
-        control,
-        formState: { errors },
-    } = useForm({
+    const { register, handleSubmit, control } = useForm({
         defaultValues: {
             name: card?.name ?? "",
             lastFourDigits: card?.lastFourDigits ?? "",

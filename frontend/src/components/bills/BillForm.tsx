@@ -4,7 +4,7 @@ import type React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import { Check } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { APIClient } from "@/api/client";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -22,12 +22,7 @@ export default function BillForm({ onSave, setIsOpen, cards, bill }: Props) {
     const [isLoading, setIsLoading] = useState(false);
     const isEditing = !!bill;
 
-    const {
-        register,
-        formState: { errors },
-        control,
-        handleSubmit,
-    } = useForm({
+    const { register, control, handleSubmit } = useForm({
         defaultValues: {
             name: bill?.name ?? "",
             totalAmountPence: bill ? bill.totalAmountPence / 100 : 0.01,
