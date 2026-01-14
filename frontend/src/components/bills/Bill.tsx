@@ -5,6 +5,17 @@ import { Button } from "../ui/button";
 import { Pencil, PlusCircle, Trash } from "lucide-react";
 import BillPaymentForm from "./BillPaymentForm";
 import { APIClient } from "@/api/client";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../ui/alert-dialog";
 
 export interface Props {
     onUpdate: (bill: BillType) => void;
@@ -20,6 +31,7 @@ export default function Bill({ onUpdate, onDelete, onEdit, bill, familyMembers }
     const [isAdding, setIsAdding] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
     async function deleteBill() {
         try {
@@ -62,7 +74,7 @@ export default function Bill({ onUpdate, onDelete, onEdit, bill, familyMembers }
                             <Button variant={"secondary"} size={"sm"} onClick={() => onEdit(bill)}>
                                 <Pencil />
                             </Button>
-                            <Button variant={"secondary"} size={"sm"} onClick={deleteBill} disabled={isDeleting}>
+                            <Button variant={"secondary"} size={"sm"} onClick={() => setDeleteDialogOpen(true)} disabled={isDeleting}>
                                 <Trash />
                             </Button>
                         </div>
@@ -120,6 +132,27 @@ export default function Bill({ onUpdate, onDelete, onEdit, bill, familyMembers }
                     </Button>
                 </div>
             </div>
+            <AlertDialog
+                open={deleteDialogOpen}
+                onOpenChange={(value) => {
+                    if (!value && !isDeleting) setDeleteDialogOpen(false);
+                }}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete your {bill.name} bill.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={deleteBill} disabled={isDeleting}>
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

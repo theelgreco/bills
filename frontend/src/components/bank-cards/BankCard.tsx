@@ -5,6 +5,16 @@ import { Pencil, Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { APIClient } from "@/api/client";
 import { formatSortCode } from "@/lib/utils";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "../ui/alert-dialog";
 
 interface Props {
     card: BankCardType;
@@ -17,6 +27,7 @@ export default function BankCard({ onDelete, onEdit, card }: Props) {
     const cardRef = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
     async function deleteCard() {
         try {
@@ -62,7 +73,7 @@ export default function BankCard({ onDelete, onEdit, card }: Props) {
                             <Button variant={"secondary"} size={"sm"} onClick={() => onEdit(card)}>
                                 <Pencil />
                             </Button>
-                            <Button variant={"secondary"} size={"sm"} onClick={deleteCard} disabled={isDeleting}>
+                            <Button variant={"secondary"} size={"sm"} onClick={() => setDeleteDialogOpen(true)}>
                                 <Trash />
                             </Button>
                         </div>
@@ -77,6 +88,27 @@ export default function BankCard({ onDelete, onEdit, card }: Props) {
                 <small className="text-xs">{formatSortCode(card.sortCode)}</small>
                 <small className="text-xs">{card.accountNumber}</small>
             </div>
+            <AlertDialog
+                open={deleteDialogOpen}
+                onOpenChange={(value) => {
+                    if (!value && !isDeleting) setDeleteDialogOpen(false);
+                }}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete your card ending in {card.lastFourDigits}.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={deleteCard} disabled={isDeleting}>
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
