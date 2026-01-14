@@ -152,9 +152,17 @@ export default function Home() {
                         </TooltipContent>
                     </Tooltip>
                     <Slash className="-rotate-30! translate-x-0.5 text-primary-foreground/30" size={16} />
-                    <Button variant={"ghost"}>
-                        <Share2 />
-                    </Button>
+
+                    <Tooltip disableHoverableContent>
+                        <TooltipTrigger asChild>
+                            <Button size={"icon-sm"} variant={"ghost"}>
+                                <Share2 />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Invite a family member</p>
+                        </TooltipContent>
+                    </Tooltip>
                 </div>
                 <ThemeSwitch />
             </div>

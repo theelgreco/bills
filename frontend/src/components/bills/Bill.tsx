@@ -1,6 +1,6 @@
 import type { Bill as BillType, FamilyMember } from "@/api/schemas";
 import { formatSortCode, getOrdinalSuffix } from "@/lib/utils";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { Pencil, PlusCircle, Trash } from "lucide-react";
 import BillPaymentForm from "./BillPaymentForm";
@@ -27,9 +27,7 @@ export interface Props {
 
 export default function Bill({ onUpdate, onDelete, onEdit, bill, familyMembers }: Props) {
     const apiClient = new APIClient();
-    const billRef = useRef<HTMLDivElement>(null);
     const [isAdding, setIsAdding] = useState(false);
-    const [isHovered, setIsHovered] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -45,41 +43,28 @@ export default function Bill({ onUpdate, onDelete, onEdit, bill, familyMembers }
         }
     }
 
-    useEffect(() => {
-        if (billRef.current === null) return;
-
-        const billEl = billRef.current;
-
-        const handleEnter = () => setIsHovered(true);
-        const handleLeave = () => setIsHovered(false);
-        billEl.addEventListener("mouseenter", handleEnter);
-        billEl.addEventListener("mouseleave", handleLeave);
-
-        return () => {
-            billEl.removeEventListener("mouseenter", handleEnter);
-            billEl.removeEventListener("mouseleave", handleLeave);
-        };
-    }, []);
-
     return (
         <div className="p-3 flex flex-col gap-3 border border-border rounded-radius bg-background">
-            <div ref={billRef} className="relative">
-                <div className="flex justify-between px-2 items-baseline">
-                    <h1>{bill.name}</h1>
+            <div className="group">
+                <div className="flex justify-between px-2 items-center">
+                    <div className="flex items-center gap-2">
+                        <h1>{bill.name}</h1>
+                        <button
+                            onClick={() => onEdit(bill)}
+                            className="opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto text-muted-foreground hover:text-foreground transition-all ml-1"
+                        >
+                            <Pencil size={14} />
+                        </button>
+                        <button
+                            onClick={() => setDeleteDialogOpen(true)}
+                            disabled={isDeleting}
+                            className="opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto text-muted-foreground hover:text-destructive transition-all disabled:opacity-50"
+                        >
+                            <Trash size={14} />
+                        </button>
+                    </div>
                     <small>£{bill.totalAmountPence / 100}</small>
                 </div>
-                {isHovered && (
-                    <>
-                        <div className="z-1 flex gap-1 absolute right-0 top-0">
-                            <Button variant={"secondary"} size={"sm"} onClick={() => onEdit(bill)}>
-                                <Pencil />
-                            </Button>
-                            <Button variant={"secondary"} size={"sm"} onClick={() => setDeleteDialogOpen(true)} disabled={isDeleting}>
-                                <Trash />
-                            </Button>
-                        </div>
-                    </>
-                )}
                 <div className="flex justify-between px-2 items-baseline mt-3">
                     <small className="font-extralight">{getOrdinalSuffix(bill.transferDay)} of the month</small>
                     {bill.card && (

@@ -39,17 +39,17 @@ export default function BillPayment({ payment, billId, onDelete }: Props) {
     return (
         <>
             <div className="group w-full flex justify-between items-center bg-background border-border">
-                <small>{payment.payer.name}</small>
                 <div className="flex items-center gap-2">
+                    <small>{payment.payer.name}</small>
                     <button
                         onClick={() => setDeleteDialogOpen(true)}
                         disabled={isDeleting}
-                        className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all disabled:opacity-50"
+                        className="opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto text-muted-foreground hover:text-destructive transition-all disabled:opacity-50"
                     >
                         <Trash size={14} />
                     </button>
-                    <small>£{payment.amountPence / 100}</small>
                 </div>
+                <small>£{payment.amountPence / 100}</small>
             </div>
             <AlertDialog
                 open={deleteDialogOpen}
