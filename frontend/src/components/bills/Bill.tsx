@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Pencil, PlusCircle, Trash } from "lucide-react";
 import BillPaymentForm from "./BillPaymentForm";
+import BillPayment from "./BillPayment";
 import { APIClient } from "@/api/client";
 import {
     AlertDialog,
@@ -14,7 +15,6 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
 } from "../ui/alert-dialog";
 
 export interface Props {
@@ -100,10 +100,18 @@ export default function Bill({ onUpdate, onDelete, onEdit, bill, familyMembers }
                     <BillPaymentForm onUpdate={onUpdate} setIsAdding={setIsAdding} billId={bill.id} familyMembers={familyMembers} />
                 )}
                 {bill.payments?.map((payment) => (
-                    <div key={payment.id} className="w-full flex justify-between bg-background border-border">
-                        <h2>{payment.payer.name}</h2>
-                        <small>£{payment.amountPence / 100}</small>
-                    </div>
+                    <BillPayment
+                        key={payment.id}
+                        payment={payment}
+                        billId={bill.id}
+                        onDelete={(paymentId) => {
+                            const updatedBill = {
+                                ...bill,
+                                payments: bill.payments.filter((p) => p.id !== paymentId),
+                            };
+                            onUpdate(updatedBill);
+                        }}
+                    />
                 ))}
                 {bill.payments.length > 0 && (
                     <>

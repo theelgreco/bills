@@ -73,7 +73,7 @@ export async function postBillPayments(req: Request, res: Response) {
 
 /** Create a bill payment */
 export async function deleteBillPayment(req: Request, res: Response) {
-    const paymentId = req.params.billPaymentId as string;
+    const paymentId = req.params.paymentId as string;
     const billId = req.params.id as string;
     const bill = await getBill(billId);
     const familyId = req.user.familyId as string;
