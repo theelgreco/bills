@@ -11,14 +11,16 @@ import { Label } from "../ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 
 interface Props {
-    onCreate: (bill: Bill) => void;
-    setIsAdding: React.Dispatch<React.SetStateAction<boolean>>;
+    onSave: (bill: Bill) => void;
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
     cards: BankCard[];
+    bill?: Bill;
 }
 
-export default function BillForm({ onCreate, setIsAdding, cards }: Props) {
+export default function BillForm({ onSave, setIsOpen, cards, bill }: Props) {
     const apiClient = new APIClient();
     const [isLoading, setIsLoading] = useState(false);
+    const isEditing = !!bill;
 
     const {
         register,
@@ -27,17 +29,17 @@ export default function BillForm({ onCreate, setIsAdding, cards }: Props) {
         handleSubmit,
     } = useForm({
         defaultValues: {
-            name: "",
-            totalAmountPence: 0.01,
-            paymentDay: 1,
-            transferDay: 1,
-            cardId: "",
+            name: bill?.name ?? "",
+            totalAmountPence: bill ? bill.totalAmountPence / 100 : 0.01,
+            paymentDay: bill?.paymentDay ?? 1,
+            transferDay: bill?.transferDay ?? 1,
+            cardId: bill?.card?.id ?? "",
         },
     });
 
     useEffect(() => {
         const handleEscapePress = (e: KeyboardEvent) => {
-            if (e.key === "Escape" && !isLoading) setIsAdding(false);
+            if (e.key === "Escape" && !isLoading) setIsOpen(false);
         };
 
         window.addEventListener("keydown", handleEscapePress);
@@ -45,9 +47,9 @@ export default function BillForm({ onCreate, setIsAdding, cards }: Props) {
         return () => {
             window.removeEventListener("keydown", handleEscapePress);
         };
-    }, [setIsAdding, isLoading]);
+    }, [setIsOpen, isLoading]);
 
-    async function addBill(data: RHFSubmitData<typeof handleSubmit>) {
+    async function saveBill(data: RHFSubmitData<typeof handleSubmit>) {
         const formattedData = {
             name: data.name,
             totalAmountPence: Number(data.totalAmountPence) * 100,
@@ -58,9 +60,11 @@ export default function BillForm({ onCreate, setIsAdding, cards }: Props) {
 
         try {
             setIsLoading(true);
-            const response = (await apiClient.fetch("/bills", { method: "POST", body: formattedData })) as Bill;
-            onCreate(response);
-            setIsAdding(false);
+            const url = isEditing ? `/bills/${bill.id}` : "/bills";
+            const method = isEditing ? "PUT" : "POST";
+            const response = (await apiClient.fetch(url, { method, body: formattedData })) as Bill;
+            onSave(response);
+            setIsOpen(false);
         } catch (err: unknown) {
             console.error(err);
         } finally {
@@ -75,11 +79,13 @@ export default function BillForm({ onCreate, setIsAdding, cards }: Props) {
                 onClick={(e) => {
                     e.stopPropagation();
                 }}
-                onSubmit={handleSubmit(addBill)}
+                onSubmit={handleSubmit(saveBill)}
             >
                 <div className="mb-3">
-                    <h1>New bill</h1>
-                    <small className="font-extralight">Enter the details of your new bill</small>
+                    <h1>{isEditing ? "Edit bill" : "New bill"}</h1>
+                    <small className="font-extralight">
+                        {isEditing ? "Update the details of your bill" : "Enter the details of your new bill"}
+                    </small>
                 </div>
                 <div className="flex justify-between gap-3">
                     <div className="flex flex-col gap-2 grow">
@@ -137,16 +143,16 @@ export default function BillForm({ onCreate, setIsAdding, cards }: Props) {
                 </div>
 
                 <div className="flex justify-between my-3">
-                    <Button type="button" variant={"ghost"} onClick={() => setIsAdding(false)} disabled={isLoading}>
+                    <Button type="button" variant={"ghost"} onClick={() => setIsOpen(false)} disabled={isLoading}>
                         Cancel
                     </Button>
                     <Button type="submit" variant={"ghost"} disabled={isLoading}>
                         <Check size={10} />
-                        Save
+                        {isEditing ? "Update" : "Save"}
                     </Button>
                 </div>
             </form>
-            <div className="fixed top-0 left-0 w-full h-full bg-black/70 z-1" onClick={() => setIsAdding(false)}></div>
+            <div className="fixed top-0 left-0 w-full h-full bg-black/70 z-1" onClick={() => setIsOpen(false)}></div>
         </>
     );
 }

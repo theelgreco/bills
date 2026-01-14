@@ -16,11 +16,30 @@ interface Props {
 
 export default function Bills({ onCreate, onUpdate, onDelete, bills, cards, familyMembers }: Props) {
     const billsContainerRef = useRef<HTMLDivElement>(null);
-    const [isAdding, setIsAdding] = useState(false);
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [editingBill, setEditingBill] = useState<BillType | undefined>(undefined);
+
+    function handleAddClick() {
+        setEditingBill(undefined);
+        setIsFormOpen(true);
+    }
+
+    function handleEditClick(bill: BillType) {
+        setEditingBill(bill);
+        setIsFormOpen(true);
+    }
+
+    function handleSave(bill: BillType) {
+        if (editingBill) {
+            onUpdate(bill);
+        } else {
+            onCreate(bill);
+        }
+    }
 
     useEffect(() => {
-        if (isAdding && billsContainerRef.current !== null) billsContainerRef.current.scrollTo(0, 0);
-    }, [isAdding]);
+        if (isFormOpen && billsContainerRef.current !== null) billsContainerRef.current.scrollTo(0, 0);
+    }, [isFormOpen]);
 
     return (
         <div className="flex flex-col gap-5 flex-1 min-h-0">
@@ -30,7 +49,7 @@ export default function Bills({ onCreate, onUpdate, onDelete, bills, cards, fami
                     variant={"ghost"}
                     onClick={(e) => {
                         e.stopPropagation();
-                        setIsAdding(true);
+                        handleAddClick();
                     }}
                 >
                     <PlusCircle />
@@ -40,14 +59,21 @@ export default function Bills({ onCreate, onUpdate, onDelete, bills, cards, fami
             <div
                 ref={billsContainerRef}
                 className="flex flex-col gap-2 overflow-y-auto flex-1 min-h-0"
-                style={{ overflowY: isAdding ? "hidden" : "auto" }}
+                style={{ overflowY: isFormOpen ? "hidden" : "auto" }}
             >
-                {!bills?.length && !isAdding && (
+                {!bills?.length && !isFormOpen && (
                     <small className="text-center w-fit mx-auto font-extralight">You haven't added any bills yet</small>
                 )}
-                {isAdding && cards && <BillForm onCreate={onCreate} setIsAdding={setIsAdding} cards={cards} />}
+                {isFormOpen && cards && <BillForm onSave={handleSave} setIsOpen={setIsFormOpen} cards={cards} bill={editingBill} />}
                 {bills?.map((bill) => (
-                    <Bill key={bill.id} onUpdate={onUpdate} onDelete={onDelete} bill={bill} familyMembers={familyMembers} />
+                    <Bill
+                        key={bill.id}
+                        onUpdate={onUpdate}
+                        onDelete={onDelete}
+                        onEdit={handleEditClick}
+                        bill={bill}
+                        familyMembers={familyMembers}
+                    />
                 ))}
             </div>
         </div>

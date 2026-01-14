@@ -51,7 +51,7 @@ export default function BankCard({ onDelete, onEdit, card }: Props) {
             ref={cardRef}
             className="relative flex flex-col justify-between border border-border bg-linear-to-br from-card min-w-60 h-30 p-3 rounded-radius"
         >
-            <div className="flex justify-between">
+            <div className="flex justify-between isolate">
                 <Badge>
                     <small>{card.name}</small>
                 </Badge>
