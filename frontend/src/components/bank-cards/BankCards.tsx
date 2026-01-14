@@ -7,28 +7,50 @@ import BankCardForm from "./BankCardForm";
 
 interface Props {
     onCreate: (card: BankCardType) => void;
+    onUpdate: (card: BankCardType) => void;
     onDelete: (card: BankCardType) => void;
     cards: BankCardType[] | null;
     familyMembers: FamilyMember[] | undefined;
 }
 
-export default function BankCards({ onDelete, onCreate, cards, familyMembers }: Props) {
-    const [isAdding, setIsAdding] = useState(false);
+export default function BankCards({ onDelete, onCreate, onUpdate, cards, familyMembers }: Props) {
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [editingCard, setEditingCard] = useState<BankCardType | undefined>(undefined);
+
+    function handleAddClick() {
+        setEditingCard(undefined);
+        setIsFormOpen(true);
+    }
+
+    function handleEditClick(card: BankCardType) {
+        setEditingCard(card);
+        setIsFormOpen(true);
+    }
+
+    function handleSave(card: BankCardType) {
+        if (editingCard) {
+            onUpdate(card);
+        } else {
+            onCreate(card);
+        }
+    }
 
     return (
         <div className="flex flex-col gap-5 mb-5">
             <div className="flex justify-between items-center">
                 <small>CARDS</small>
-                <Button variant={"ghost"} onClick={() => setIsAdding(true)} disabled={isAdding}>
+                <Button variant={"ghost"} onClick={handleAddClick} disabled={isFormOpen}>
                     <PlusCircle />
                     <small>Add card</small>
                 </Button>
             </div>
             <div className="flex gap-2 overflow-x-auto">
                 {!cards?.length && <small className="text-center w-fit mx-auto font-extralight">You haven't added any cards yet</small>}
-                {isAdding && familyMembers && <BankCardForm onCreate={onCreate} setIsAdding={setIsAdding} familyMembers={familyMembers} />}
+                {isFormOpen && familyMembers && (
+                    <BankCardForm onSave={handleSave} setIsOpen={setIsFormOpen} familyMembers={familyMembers} card={editingCard} />
+                )}
                 {cards?.map((card) => (
-                    <BankCard key={card.id} card={card} onDelete={onDelete}></BankCard>
+                    <BankCard key={card.id} card={card} onDelete={onDelete} onEdit={handleEditClick}></BankCard>
                 ))}
             </div>
         </div>

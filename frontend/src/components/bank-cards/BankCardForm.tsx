@@ -9,15 +9,17 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { APIClient } from "@/api/client";
 
 interface Props {
-    onCreate: (card: BankCard) => void;
-    setIsAdding: React.Dispatch<React.SetStateAction<boolean>>;
+    onSave: (card: BankCard) => void;
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
     familyMembers: FamilyMember[];
+    card?: BankCard;
 }
 
-export default function BankCardForm({ onCreate, setIsAdding, familyMembers }: Props) {
+export default function BankCardForm({ onSave, setIsOpen, familyMembers, card }: Props) {
     const apiClient = new APIClient();
     const formRef = useRef<HTMLFormElement>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const isEditing = !!card;
 
     const {
         register,
@@ -26,17 +28,17 @@ export default function BankCardForm({ onCreate, setIsAdding, familyMembers }: P
         formState: { errors },
     } = useForm({
         defaultValues: {
-            name: "",
-            lastFourDigits: "",
-            sortCode: "",
-            accountNumber: "",
-            ownerId: "",
+            name: card?.name ?? "",
+            lastFourDigits: card?.lastFourDigits ?? "",
+            sortCode: card?.sortCode ?? "",
+            accountNumber: card?.accountNumber ?? "",
+            ownerId: card?.owner.id ?? "",
         },
     });
 
     useEffect(() => {
         const handleEscapePress = (e: KeyboardEvent) => {
-            if (e.key === "Escape" && !isLoading) setIsAdding(false);
+            if (e.key === "Escape" && !isLoading) setIsOpen(false);
         };
 
         window.addEventListener("keydown", handleEscapePress);
@@ -44,14 +46,16 @@ export default function BankCardForm({ onCreate, setIsAdding, familyMembers }: P
         return () => {
             window.removeEventListener("keydown", handleEscapePress);
         };
-    }, [setIsAdding, isLoading]);
+    }, [setIsOpen, isLoading]);
 
-    async function addCard(data: RHFSubmitData<typeof handleSubmit>) {
+    async function saveCard(data: RHFSubmitData<typeof handleSubmit>) {
         try {
             setIsLoading(true);
-            const response = (await apiClient.fetch("/cards", { method: "POST", body: data })) as BankCard;
-            onCreate(response);
-            setIsAdding(false);
+            const url = isEditing ? `/cards/${card.id}` : "/cards";
+            const method = isEditing ? "PUT" : "POST";
+            const response = (await apiClient.fetch(url, { method, body: data })) as BankCard;
+            onSave(response);
+            setIsOpen(false);
         } catch (err: unknown) {
             console.error(err);
         } finally {
@@ -60,18 +64,20 @@ export default function BankCardForm({ onCreate, setIsAdding, familyMembers }: P
     }
 
     return (
-        <div className="z-1 fixed top-0 left-0 w-full h-full bg-black/70" onClick={() => setIsAdding(false)}>
+        <div className="z-1 fixed top-0 left-0 w-full h-full bg-black/70" onClick={() => setIsOpen(false)}>
             <form
                 ref={formRef}
                 className="z-1 absolute top-1/2 left-1/2 -translate-1/2 flex flex-col gap-3 justify-between border border-border bg-background min-w-100 max-w-full p-3 pb-0 rounded-radius"
                 onClick={(e) => {
                     e.stopPropagation();
                 }}
-                onSubmit={handleSubmit(addCard)}
+                onSubmit={handleSubmit(saveCard)}
             >
                 <div className="mb-3">
-                    <h1>New card</h1>
-                    <small className="font-extralight">Enter the details of your new card</small>
+                    <h1>{isEditing ? "Edit card" : "New card"}</h1>
+                    <small className="font-extralight">
+                        {isEditing ? "Update the details of your card" : "Enter the details of your new card"}
+                    </small>
                 </div>
 
                 <div className="flex justify-between gap-3">
@@ -126,12 +132,12 @@ export default function BankCardForm({ onCreate, setIsAdding, familyMembers }: P
                     />
                 </div>
                 <div className="flex justify-between my-3">
-                    <Button type="button" variant={"ghost"} onClick={() => setIsAdding(false)} disabled={isLoading}>
+                    <Button type="button" variant={"ghost"} onClick={() => setIsOpen(false)} disabled={isLoading}>
                         Cancel
                     </Button>
                     <Button type="submit" variant={"ghost"} disabled={isLoading}>
                         <Check size={10} />
-                        Save
+                        {isEditing ? "Update" : "Save"}
                     </Button>
                 </div>
             </form>

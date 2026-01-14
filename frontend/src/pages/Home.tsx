@@ -112,6 +112,9 @@ export default function Home() {
                         onCreate={(card) => {
                             setCards((prev) => [card, ...(prev || [])]);
                         }}
+                        onUpdate={(card) => {
+                            setCards((prev) => (prev || []).map((prevCard) => (prevCard.id === card.id ? card : prevCard)));
+                        }}
                         cards={cards}
                         familyMembers={family?.members}
                     />

@@ -1,7 +1,7 @@
 import type { BankCard as BankCardType, BankCard } from "@/api/schemas";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { Trash } from "lucide-react";
+import { Pencil, Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { APIClient } from "@/api/client";
 import { formatSortCode } from "@/lib/utils";
@@ -9,9 +9,10 @@ import { formatSortCode } from "@/lib/utils";
 interface Props {
     card: BankCardType;
     onDelete: (card: BankCardType) => void;
+    onEdit: (card: BankCardType) => void;
 }
 
-export default function BankCard({ onDelete, card }: Props) {
+export default function BankCard({ onDelete, onEdit, card }: Props) {
     const apiClient = new APIClient();
     const cardRef = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
@@ -57,8 +58,11 @@ export default function BankCard({ onDelete, card }: Props) {
                 <small className="text-xs">{card.owner.name}</small>
                 {isHovered && (
                     <>
-                        <div className="z-1 flex absolute right-2 top-2" onClick={deleteCard}>
-                            <Button variant={"secondary"} size={"sm"} disabled={isDeleting}>
+                        <div className="z-1 flex gap-1 absolute right-2 top-2">
+                            <Button variant={"secondary"} size={"sm"} onClick={() => onEdit(card)}>
+                                <Pencil />
+                            </Button>
+                            <Button variant={"secondary"} size={"sm"} onClick={deleteCard} disabled={isDeleting}>
                                 <Trash />
                             </Button>
                         </div>
