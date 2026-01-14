@@ -78,7 +78,7 @@ export default function Home() {
     }, [family?.members]);
 
     return (
-        <section className="w-125 h-full max-w-full max-h-full flex flex-col gap-5 mx-auto p-10 overflow-hidden">
+        <section className="w-125 h-full max-w-full max-h-full flex flex-col gap-5 mx-auto p-5 sm:p-10 overflow-hidden">
             <div className="flex flex-col items-center">
                 <h1 className="text-center text-2xl">Welcome, {user?.name}</h1>
                 {family && (
@@ -106,7 +106,7 @@ export default function Home() {
             </div>
             <hr />
             {user?.familyId ? (
-                <div className="flex flex-col flex-1 min-h-0 gap-5">
+                <div className="flex flex-col flex-1 min-h-0 gap-5 overflow-y-auto">
                     <BankCards
                         onDelete={(card) => setCards((prev) => (prev || []).filter((prevCard) => prevCard.id !== card.id))}
                         onCreate={(card) => {

@@ -62,7 +62,7 @@ export default function BankCardForm({ onSave, setIsOpen, familyMembers, card }:
         <div className="z-1 fixed top-0 left-0 w-full h-full bg-black/70" onClick={() => setIsOpen(false)}>
             <form
                 ref={formRef}
-                className="z-1 absolute top-1/2 left-1/2 -translate-1/2 flex flex-col gap-3 justify-between border border-border bg-background min-w-100 max-w-full p-3 pb-0 rounded-radius"
+                className="w-full max-w-100 p-3 pb-0 z-1 absolute top-1/2 left-1/2 -translate-1/2 flex flex-col gap-3 justify-between border border-border bg-background rounded-radius"
                 onClick={(e) => {
                     e.stopPropagation();
                 }}

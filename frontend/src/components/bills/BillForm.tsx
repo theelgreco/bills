@@ -70,7 +70,7 @@ export default function BillForm({ onSave, setIsOpen, cards, bill }: Props) {
     return (
         <>
             <form
-                className="z-2 flex flex-col gap-3 justify-between border border-border bg-background max-w-full p-3 pb-0 rounded-radius"
+                className="w-full max-w-100 p-3 pb-0 fixed top-1/2 left-1/2 -translate-1/2 z-2 flex flex-col gap-3 justify-between border border-border bg-background rounded-radius"
                 onClick={(e) => {
                     e.stopPropagation();
                 }}

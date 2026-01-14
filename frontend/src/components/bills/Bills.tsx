@@ -56,11 +56,7 @@ export default function Bills({ onCreate, onUpdate, onDelete, bills, cards, fami
                     <small>Add bill</small>
                 </Button>
             </div>
-            <div
-                ref={billsContainerRef}
-                className="flex flex-col gap-2 overflow-y-auto flex-1 min-h-0"
-                style={{ overflowY: isFormOpen ? "hidden" : "auto" }}
-            >
+            <div ref={billsContainerRef} className="flex flex-col gap-2 flex-1 min-h-0">
                 {!bills?.length && !isFormOpen && (
                     <small className="text-center w-fit mx-auto font-extralight">You haven't added any bills yet</small>
                 )}
