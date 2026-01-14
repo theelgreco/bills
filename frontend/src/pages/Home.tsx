@@ -7,15 +7,17 @@ import ThemeSwitch from "@/components/ThemeSwitch";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUser } from "@/hooks/user";
-import { getInitials, stringToHexColor } from "@/lib/utils";
+import { cn, getInitials, stringToHexColor } from "@/lib/utils";
 import { Check, LogOut, Share2, Slash } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useSocketEvent, type SocketEventCb } from "@/hooks/socket";
 
 export default function Home() {
     const apiClient = new APIClient();
 
     const [, setIsLoading] = useState(false);
     const [family, setFamily] = useState<Family | null>(null);
+    const [onlineMembers, setOnlineMembers] = useState<string[]>([]);
     const [cards, setCards] = useState<BankCard[] | null>(null);
     const [bills, setBills] = useState<Bill[] | null>(null);
     const [avatarIcons, setAvatarIcons] = useState<{ backgroundColor: string; initials: string; id: string }[]>([]);
@@ -77,6 +79,22 @@ export default function Home() {
         }
     }, [family?.members]);
 
+    const handleMembersOnline: SocketEventCb<"members-online"> = (data) => setOnlineMembers(data);
+    const handleMemberOnline: SocketEventCb<"member-online"> = (data) =>
+        setOnlineMembers((prev) => [...prev.filter((prevMember) => prevMember !== data), data]);
+    const handleMemberOffline: SocketEventCb<"member-offline"> = (data) =>
+        setOnlineMembers((prev) => prev.filter((prevMember) => prevMember !== data));
+    const addCard = (data: BankCard) => setCards((prev) => [data, ...(prev || [])]);
+    const updateCard = (card: BankCard) => setCards((prev) => (prev || []).map((prevCard) => (prevCard.id === card.id ? card : prevCard)));
+    const deleteCard = (cardId: string) => setCards((prev) => (prev || []).filter((prevCard) => prevCard.id !== cardId));
+
+    useSocketEvent("members-online", handleMembersOnline);
+    useSocketEvent("member-online", handleMemberOnline);
+    useSocketEvent("member-offline", handleMemberOffline);
+    useSocketEvent("card-added", addCard);
+    useSocketEvent("card-updated", updateCard);
+    useSocketEvent("card-deleted", deleteCard);
+
     return (
         <section className="w-125 h-full max-w-full max-h-full flex flex-col gap-5 mx-auto p-5 sm:p-10 overflow-hidden">
             <div className="flex flex-col items-center">
@@ -88,7 +106,10 @@ export default function Home() {
                             {avatarIcons.map((member) => (
                                 <div
                                     key={member.id}
-                                    className="w-10 aspect-square rounded-full grid place-items-center select-none"
+                                    className={cn(
+                                        "w-10 relative aspect-square rounded-full grid place-items-center select-none",
+                                        onlineMembers.includes(member.id) ? "outline-4 outline-primary" : ""
+                                    )}
                                     title={family.members.find((famMemb) => famMemb.id === member.id)?.name}
                                     style={{
                                         backgroundColor: member.backgroundColor,
@@ -108,13 +129,9 @@ export default function Home() {
             {user?.familyId ? (
                 <div className="flex flex-col flex-1 min-h-0 gap-5 overflow-y-auto">
                     <BankCards
-                        onDelete={(card) => setCards((prev) => (prev || []).filter((prevCard) => prevCard.id !== card.id))}
-                        onCreate={(card) => {
-                            setCards((prev) => [card, ...(prev || [])]);
-                        }}
-                        onUpdate={(card) => {
-                            setCards((prev) => (prev || []).map((prevCard) => (prevCard.id === card.id ? card : prevCard)));
-                        }}
+                        onDelete={deleteCard}
+                        onCreate={addCard}
+                        onUpdate={updateCard}
                         cards={cards}
                         familyMembers={family?.members}
                     />

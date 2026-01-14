@@ -7,6 +7,7 @@ import type { RHFSubmitData } from "@/types/rhf";
 import type { BankCard, FamilyMember } from "@/api/schemas";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 import { APIClient } from "@/api/client";
+import { socketEmit } from "@/hooks/socket";
 
 interface Props {
     onSave: (card: BankCard) => void;
@@ -49,6 +50,8 @@ export default function BankCardForm({ onSave, setIsOpen, familyMembers, card }:
             const url = isEditing ? `/cards/${card.id}` : "/cards";
             const method = isEditing ? "PUT" : "POST";
             const response = (await apiClient.fetch(url, { method, body: data })) as BankCard;
+            const emit = isEditing ? "update-card" : "add-card";
+            socketEmit(emit, response);
             onSave(response);
             setIsOpen(false);
         } catch (err: unknown) {

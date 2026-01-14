@@ -15,10 +15,11 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "../ui/alert-dialog";
+import { socketEmit } from "@/hooks/socket";
 
 interface Props {
     card: BankCardType;
-    onDelete: (card: BankCardType) => void;
+    onDelete: (cardId: string) => void;
     onEdit: (card: BankCardType) => void;
 }
 
@@ -33,7 +34,8 @@ export default function BankCard({ onDelete, onEdit, card }: Props) {
         try {
             setIsDeleting(true);
             await apiClient.fetch(`/cards/${card.id}`, { method: "DELETE" });
-            onDelete(card);
+            socketEmit("delete-card", card.id);
+            onDelete(card.id);
         } catch (err: unknown) {
             console.error(err);
         } finally {

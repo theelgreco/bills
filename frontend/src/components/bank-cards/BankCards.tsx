@@ -8,7 +8,7 @@ import BankCardForm from "./BankCardForm";
 interface Props {
     onCreate: (card: BankCardType) => void;
     onUpdate: (card: BankCardType) => void;
-    onDelete: (card: BankCardType) => void;
+    onDelete: (cardId: string) => void;
     cards: BankCardType[] | null;
     familyMembers: FamilyMember[] | undefined;
 }
