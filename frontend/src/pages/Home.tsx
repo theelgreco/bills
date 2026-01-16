@@ -130,7 +130,7 @@ export default function Home() {
             </div>
             <hr />
             {user?.familyId ? (
-                <div className="flex flex-col flex-1 min-h-0 gap-5 overflow-y-auto">
+                <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
                     <BankCards
                         onDelete={deleteCard}
                         onCreate={addCard}
