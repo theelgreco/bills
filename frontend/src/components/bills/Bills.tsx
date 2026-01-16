@@ -29,6 +29,14 @@ export default function Bills({ onCreate, onUpdate, onDelete, bills, cards, fami
         return bills.filter((bill) => bill.payments.some((payment) => payment.payer.id === userId));
     }, [bills, showOnlyMyBills, userId]);
 
+    const totalMonthlySpend = useMemo(() => {
+        if (!bills) return 0;
+        return bills.reduce((total, bill) => {
+            const userPayments = bill.payments.filter((payment) => payment.payer.id === userId);
+            return total + userPayments.reduce((sum, payment) => sum + payment.amountPence, 0);
+        }, 0);
+    }, [bills, userId]);
+
     function handleAddClick() {
         setEditingBill(undefined);
         setIsFormOpen(true);
@@ -53,25 +61,32 @@ export default function Bills({ onCreate, onUpdate, onDelete, bills, cards, fami
 
     return (
         <div className="flex flex-col gap-5 flex-1 min-h-0">
-            <div className="flex justify-between items-center">
-                <small>BILLS</small>
-                <div className="flex items-center gap-4">
+            <div className="flex flex-col gap-2">
+                <div className="flex justify-between items-center">
+                    <small>BILLS</small>
+                    <div className="flex items-center gap-4">
+                        <Button
+                            variant={"ghost"}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddClick();
+                            }}
+                        >
+                            <PlusCircle />
+                            <small>Add bill</small>
+                        </Button>
+                    </div>
+                </div>
+                <div className="flex justify-between items-center">
+                    <small className="font-light">
+                        Your monthly total: <span className="font-semibold">£{(totalMonthlySpend / 100).toFixed(2)}</span>
+                    </small>
                     <div className="flex items-center gap-2">
                         <Switch id="my-bills-filter" checked={showOnlyMyBills} onCheckedChange={setShowOnlyMyBills} />
                         <Label htmlFor="my-bills-filter" className="text-xs cursor-pointer">
                             My bills only
                         </Label>
                     </div>
-                    <Button
-                        variant={"ghost"}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddClick();
-                        }}
-                    >
-                        <PlusCircle />
-                        <small>Add bill</small>
-                    </Button>
                 </div>
             </div>
             <div ref={billsContainerRef} className="flex flex-col gap-2 flex-1 min-h-0">
