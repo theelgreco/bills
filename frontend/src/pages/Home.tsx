@@ -108,7 +108,7 @@ export default function Home() {
                                     key={member.id}
                                     className={cn(
                                         "w-10 relative aspect-square rounded-full grid place-items-center select-none",
-                                        onlineMembers.includes(member.id) ? "outline-4 outline-primary" : ""
+                                        onlineMembers.includes(member.id) ? "outline-4 outline-primary" : "",
                                     )}
                                     title={family.members.find((famMemb) => famMemb.id === member.id)?.name}
                                     style={{
@@ -145,6 +145,7 @@ export default function Home() {
                         bills={bills}
                         cards={cards}
                         familyMembers={family?.members || []}
+                        userId={user?.id || ""}
                     />
                 </div>
             ) : (
