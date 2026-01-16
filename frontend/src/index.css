@@ -142,7 +142,7 @@
 
     body,
     #root {
-        @apply w-screen max-w-screen h-screen max-h-screen overflow-hidden p-0!;
+        @apply w-screen max-w-screen h-dvh max-h-dvh overflow-hidden p-0!;
     }
 
     body {
@@ -184,7 +184,7 @@ Read more here: https://tailwindcss.com/docs/adding-custom-styles#simple-utiliti
 }
 
 @utility bg-size-* {
-    background-size: --value(--bg-size- *);
+    background-size: --value(--bg-size-*);
 }
 
 /* Stops images from being draggable */
