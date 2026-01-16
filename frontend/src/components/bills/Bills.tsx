@@ -23,7 +23,7 @@ export default function Bills({ onCreate, onUpdate, onDelete, bills, cards, fami
     const [editingBill, setEditingBill] = useState<BillType | undefined>(undefined);
     const [showOnlyMyBills, setShowOnlyMyBills] = useState(false);
     const [isSectionExpanded, setIsSectionExpanded] = useState(true);
-    const [collapsedBills, setCollapsedBills] = useState<Set<string>>(new Set());
+    const [expandedBills, setExpandedBills] = useState<Set<string>>(new Set());
 
     const filteredBills = useMemo(() => {
         if (!bills) return null;
@@ -39,10 +39,10 @@ export default function Bills({ onCreate, onUpdate, onDelete, bills, cards, fami
         }, 0);
     }, [bills, userId]);
 
-    const allBillsExpanded = filteredBills ? filteredBills.every((bill) => !collapsedBills.has(bill.id)) : true;
+    const allBillsExpanded = filteredBills ? filteredBills.every((bill) => expandedBills.has(bill.id)) : false;
 
     function toggleBillExpanded(billId: string) {
-        setCollapsedBills((prev) => {
+        setExpandedBills((prev) => {
             const newSet = new Set(prev);
             if (newSet.has(billId)) {
                 newSet.delete(billId);
@@ -55,9 +55,9 @@ export default function Bills({ onCreate, onUpdate, onDelete, bills, cards, fami
 
     function toggleAllBills() {
         if (allBillsExpanded) {
-            setCollapsedBills(new Set(filteredBills?.map((b) => b.id) || []));
+            setExpandedBills(new Set());
         } else {
-            setCollapsedBills(new Set());
+            setExpandedBills(new Set(filteredBills?.map((b) => b.id) || []));
         }
     }
 
@@ -156,7 +156,7 @@ export default function Bills({ onCreate, onUpdate, onDelete, bills, cards, fami
                             onEdit={handleEditClick}
                             bill={bill}
                             familyMembers={familyMembers}
-                            isExpanded={!collapsedBills.has(bill.id)}
+                            isExpanded={expandedBills.has(bill.id)}
                             onToggleExpand={() => toggleBillExpanded(bill.id)}
                         />
                     ))}
