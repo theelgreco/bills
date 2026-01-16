@@ -53,7 +53,7 @@ export const BillSchema = z.object({
     totalAmountPence: z.number(),
     paymentDay: z.number(),
     transferDay: z.number(),
-    card: BankCardSchema,
+    card: BankCardSchema.nullable(),
     payments: z.array(BillPaymentSchema),
 });
 export type Bill = z.infer<typeof BillSchema>;

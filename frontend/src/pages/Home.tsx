@@ -86,7 +86,10 @@ export default function Home() {
         setOnlineMembers((prev) => prev.filter((prevMember) => prevMember !== data));
     const addCard = (data: BankCard) => setCards((prev) => [data, ...(prev || [])]);
     const updateCard = (card: BankCard) => setCards((prev) => (prev || []).map((prevCard) => (prevCard.id === card.id ? card : prevCard)));
-    const deleteCard = (cardId: string) => setCards((prev) => (prev || []).filter((prevCard) => prevCard.id !== cardId));
+    const deleteCard = (cardId: string) => {
+        setCards((prev) => (prev || []).filter((prevCard) => prevCard.id !== cardId));
+        setBills((prev) => (prev || []).map((bill) => (bill.card?.id === cardId ? { ...bill, card: null } : bill)));
+    };
 
     useSocketEvent("members-online", handleMembersOnline);
     useSocketEvent("member-online", handleMemberOnline);
